@@ -1,0 +1,6 @@
+chrome >= 60,
+firefox >= 60
+edge >= 17,
+and_ff >= 59,
+and_chr >= 61,
+ios_saf >= 12

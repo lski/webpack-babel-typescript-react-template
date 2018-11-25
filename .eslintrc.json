@@ -1,0 +1,41 @@
+{
+	"env": {
+        "browser": true,
+        "commonjs": true,
+        "es6": true
+    },
+	"plugins": [
+		"react"
+	],
+	"extends": [
+		"eslint:recommended",
+		"plugin:react/recommended"
+	],
+	"parserOptions": {
+        "ecmaVersion": 9,
+        "sourceType": "module",
+        "ecmaFeatures": {
+			"experimentalObjectRestSpread": true,
+            "jsx": true
+        }
+	},
+	"rules": {
+        "indent": [
+            "error",
+			"tab",
+			{ "SwitchCase": 1 }
+        ],
+        "linebreak-style": [
+            "error",
+            "windows"
+        ],
+        "quotes": [
+            "error",
+            "single"
+        ],
+        "semi": [
+            "error",
+            "always"
+        ]
+    }
+}
