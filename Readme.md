@@ -1,5 +1,11 @@
 # Webpack/Babel/Typescript/React Template
 
+## Deprecated
+
+__This template is out of date and I dont recommend using it for anything other than reference.__
+
+-----
+
 This template works, but is built for my own use, if it helps others thats cool :) But I would first recommened you look at [create-react-app](https://facebook.github.io/create-react-app/).
 
 This template provides a build system that is easy to extend, but also a good base on its own. It  excludes the webpack-dev-server as it is designed to build to another platform (specifically for me .Net Core MVC, however it could be anything) and then to run on that.
