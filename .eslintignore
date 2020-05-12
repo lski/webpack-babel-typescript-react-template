@@ -1,0 +1,8 @@
+dist
+build/**
+node_modules
+
+# These are type files that auto-generated for css and sass files
+# They use a naming convention thats different, so ideal to ignore them
+**/*.scss.d.ts
+**/*.css.d.ts
