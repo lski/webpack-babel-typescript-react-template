@@ -111,11 +111,14 @@ Thats it.
 
 ### Include React Router
 
-Nothing special to use react router, just run:
+Just install the packages to use React Router
 
-```bash
-yarn add react-router-dom
-```
+- Install `react-router`/`react-router-dom` along with types for Typescript
+
+    ```bash
+    yarn add react-router-dom
+    yarn add -D @types/react-router @types/react-router-dom
+    ```
 
 ### Switch to Preact
 
