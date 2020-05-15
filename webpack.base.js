@@ -16,6 +16,7 @@ module.exports = (outputDir, webpageTitle) => ({
 		filename: 'app.js',
 		path: outputDir,
 		pathinfo: true,
+		publicPath: '/',
 	},
 	// externals required for using React with CDN
 	// we still install react with yarn, but this means that they are not added to the output
