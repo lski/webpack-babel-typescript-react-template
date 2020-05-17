@@ -3,6 +3,7 @@
 		"target": "esnext",
 		"allowJs": true,
 		"strict": true,
+		"strictNullChecks": true,
 		"allowSyntheticDefaultImports": true,
 		"forceConsistentCasingInFileNames": true,
 		"module": "ES2020",
