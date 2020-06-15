@@ -3,8 +3,12 @@
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
-const WatchIgnorePlugin = require('webpack').WatchIgnorePlugin;
 const CopyPlugin = require('copy-webpack-plugin');
+const webpack = require('webpack');
+const { WatchIgnorePlugin, DefinePlugin } = webpack;
+const dotenv = require('dotenv');
+
+dotenv.config();
 
 /**
  * @param {string} outputDir The absolute path to out too
@@ -87,6 +91,10 @@ module.exports = (outputDir, webpageTitle) => ({
 		new CleanWebpackPlugin(),
 		// Copy all files (not the template) to the build folder
 		new CopyPlugin([{ from: 'public' }], { ignore: ['index.html'] }),
+		// Clean up the env variables available to this app in a similar way to CRA
+		new DefinePlugin({
+			'process.env': sanitizeEnvVars(process.env),
+		}),
 	],
 });
 
@@ -177,3 +185,17 @@ const createStyleLoaders = () => [
 		],
 	},
 ];
+
+/**
+ * Creates a new env object only containing those beginning with REACT_APP_
+ *
+ * @param {object} env
+ * @return {object} new object
+ */
+const sanitizeEnvVars = (env) =>
+	Object.keys(env)
+		.filter((key) => /^REACT_APP_/i.test(key))
+		.reduce((output, key) => {
+			output[key] = `"${env[key]}"`;
+			return output;
+		}, {});

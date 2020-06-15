@@ -13,10 +13,17 @@ A template for building an SPA with minimal production footprint.
 
 An alternative to [Create React App (CRA)](https://facebook.github.io/create-react-app/) it is designed for internal use, but available for others to use.
 
+#### Public folder for assests
+
 Like with CRA images can either be imported (recommended) or directly added to the public folder. Anything in the public folder will get copied to the outputDir (see [settings](#settings)) and can be referenced from the website root in html.
+
+#### Code Splitting
 
 Code splitting is supported, however a router is excluded by default as its easy to add one 'as and when' you need one.
 
+#### .env
+
+An optional `.env` file is supported, however the default implementation is to restrict environment variables available in the react application to values beginning with `REACT_APP_` to reduce the chance of exposing sensitive information by mistake.
 
 _**NB:** There are guides for switching the tech as well._
 
@@ -291,7 +298,7 @@ It would be ideal if:
 - Investigate source maps relating to the original, rather than webpack output
 - Investigate whether storybook is worthwhile for the template.
 - Add Dockerfile for docker development
-- Add .env file for development and have them work with webpack
+- Update .env file for development and have them work with webpack
   - Port
   - Host
   - Page tile
