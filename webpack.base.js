@@ -82,7 +82,11 @@ module.exports = (outputDir, webpageTitle) => ({
 	plugins: [
 		// WatchIgnorePlugin currently only used only to prevent '--watch' being slow when using Sass/CSS Modules, remove if not needed
 		new WatchIgnorePlugin([/s?css\.d\.ts$/]),
-		new ForkTsCheckerWebpackPlugin({ eslint: true }),
+		new ForkTsCheckerWebpackPlugin({
+			eslint: {
+				files: './src/**/*',
+			},
+		}),
 		new HtmlWebpackPlugin({
 			template: './public/index.html',
 			title: webpageTitle,
@@ -90,7 +94,16 @@ module.exports = (outputDir, webpageTitle) => ({
 		}),
 		new CleanWebpackPlugin(),
 		// Copy all files (not the template) to the build folder
-		new CopyPlugin([{ from: 'public' }], { ignore: ['index.html'] }),
+		new CopyPlugin({
+			patterns: [
+				{
+					from: 'public',
+					globOptions: {
+						ignore: ['index.html'],
+					},
+				},
+			],
+		}),
 		// Clean up the env variables available to this app in a similar way to CRA
 		new DefinePlugin({
 			'process.env': sanitizeEnvVars(process.env),
