@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import css from './App.module.css';
 import logo from './logo.svg';
 
-export function App() {
+export function App(): JSX.Element {
 	const [msg, setMsg] = useState<string>('Hello World');
 
 	return (

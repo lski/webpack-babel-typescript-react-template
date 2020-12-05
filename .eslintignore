@@ -6,3 +6,10 @@ node_modules
 # They use a naming convention thats different, so ideal to ignore them
 **/*.scss.d.ts
 **/*.css.d.ts
+
+# Image files dont need parsing
+**/*.svg
+
+# Excludes them from being valid
+**/*.scss
+**/*.css
