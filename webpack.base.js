@@ -55,12 +55,25 @@ module.exports = (outputDir, webpageTitle) => ({
 			// Handles images
 			{
 				exclude: [/node_modules/],
-				test: /\.(png|jp(e*)g|svg)$/,
+				test: /\.(png|jp(e*)g)$/,
 				use: [
 					{
 						loader: 'url-loader',
 						options: {
 							limit: 4096, // Convert images < 4kb to base64 strings
+							name: 'assets/images/[hash]-[name].[ext]',
+						},
+					},
+				],
+			},
+			{
+				test: /\.svg$/i,
+				use: [
+					{
+						loader: 'url-loader',
+						options: {
+							limit: 2048, // Convert images < 4kb to base64 strings
+							encoding: false,
 							name: 'assets/images/[hash]-[name].[ext]',
 						},
 					},
@@ -81,7 +94,7 @@ module.exports = (outputDir, webpageTitle) => ({
 	},
 	plugins: [
 		// WatchIgnorePlugin currently only used only to prevent '--watch' being slow when using Sass/CSS Modules, remove if not needed
-		new WatchIgnorePlugin([/s?css\.d\.ts$/]),
+		new WatchIgnorePlugin({ paths: [/s?css\.d\.ts$/] }),
 		new ForkTsCheckerWebpackPlugin({
 			eslint: {
 				files: './src/**/*',
@@ -141,8 +154,8 @@ const createStyleLoaders = () => [
 				options: {
 					modules: {
 						localIdentName: '[name]__[local]--[hash:base64:5]',
+						exportLocalsConvention: 'camelCase',
 					},
-					localsConvention: 'camelCase',
 				},
 			},
 		],
@@ -157,7 +170,9 @@ const createStyleLoaders = () => [
 			{
 				loader: 'css-loader',
 				options: {
-					localsConvention: 'camelCase',
+					modules: {
+						exportLocalsConvention: 'camelCase',
+					},
 				},
 			},
 		],
@@ -174,8 +189,8 @@ const createStyleLoaders = () => [
 				options: {
 					modules: {
 						localIdentName: '[name]__[local]--[hash:base64:5]',
+						exportLocalsConvention: 'camelCase',
 					},
-					localsConvention: 'camelCase',
 				},
 			},
 			'sass-loader',
@@ -191,7 +206,9 @@ const createStyleLoaders = () => [
 			{
 				loader: 'css-loader',
 				options: {
-					localsConvention: 'camelCase',
+					modules: {
+						exportLocalsConvention: 'camelCase',
+					},
 				},
 			},
 			'sass-loader',
