@@ -12,6 +12,26 @@ module.exports = {
 			version: 'detect', // Tells eslint-plugin-react to automatically detect the version of React to use
 		},
 	},
+	ignorePatterns: [
+		'dist/**',
+		'build/**',
+		'node_modules/**',
+
+		// Auto generated for (s)css modules in TS. They use a naming convention thats different, so ideal to ignore them
+		'**/*.scss.d.ts',
+		'**/*.css.d.ts',
+
+		// Excludes css from being validating. Remove if adding css support
+		'**/*.scss',
+		'**/*.css',
+
+		// Image files dont need parsing
+		'**/*.svg',
+		'**/*.jpg',
+		'**/*.jpeg',
+		'**/*.png',
+		'**/*.webm',
+	],
 	overrides: [
 		{
 			files: ['*.ts', '*.tsx'],
