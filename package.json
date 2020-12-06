@@ -4,7 +4,7 @@
 	"description": "SPA Build Template",
 	"main": "dist/app.js",
 	"scripts": {
-		"start": "npx webpack-dev-server",
+		"start": "npx webpack serve",
 		"analysis": "yarn run build:dev --env.analysis",
 		"build": "npx webpack --mode=\"production\"",
 		"build:dev": "npx webpack",
