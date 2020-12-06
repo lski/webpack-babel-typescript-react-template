@@ -31,7 +31,7 @@ module.exports = {
 			},
 		},
 		{
-			files: ['*.js', '*.jsx'],
+			files: ['./src/*.js', './src/*.jsx'],
 			extends: [
 				'eslint:recommended',
 				'plugin:react/recommended', // Uses the recommended rules from @eslint-plugin-react

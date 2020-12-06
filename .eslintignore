@@ -9,7 +9,11 @@ node_modules
 
 # Image files dont need parsing
 **/*.svg
+**/*.jpg
+**/*.jpeg
+**/*.png
+**/*.webm
 
-# Excludes them from being valid
+# Excludes css from being validating. Remove if adding css support
 **/*.scss
 **/*.css
