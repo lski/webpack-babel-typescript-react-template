@@ -3,3 +3,15 @@ import * as ReactDOM from 'react-dom';
 import App from './components/App';
 
 ReactDOM.render(<App />, document.getElementById('app'));
+
+sdfg
+sd
+g
+sfdg
+sdfgs
+ asdASD
+
+ MediaStreamAudioSourceNode
+ SDFSDFSD
+
+ FDSFSDF

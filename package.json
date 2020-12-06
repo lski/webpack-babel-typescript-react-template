@@ -9,7 +9,7 @@
 		"build": "npx webpack --mode=\"production\"",
 		"build:dev": "npx webpack",
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"lint": "npx eslint '*/**/*.{js,ts,tsx}'",
+		"lint": "npx eslint",
 		"lint:fix": "yarn run lint --fix"
 	},
 	"contributors": [],
