@@ -3,9 +3,9 @@
 A template for building an SPA with minimal production footprint.
 
 - Yarn
-- Webpack 4
+- Webpack 5
 - Babel 7+
-- Typescript 3.8
+- Typescript 4.1
 - ESLint 7+
 - Prettier 2+
 - CSS (Optional Sass) Modules
@@ -13,15 +13,15 @@ A template for building an SPA with minimal production footprint.
 
 An alternative to [Create React App (CRA)](https://facebook.github.io/create-react-app/) it is designed for internal use, but available for others to use.
 
-#### Public folder for assests
+### Public folder for assests
 
 Like with CRA images can either be imported (recommended) or directly added to the public folder. Anything in the public folder will get copied to the outputDir (see [settings](#settings)) and can be referenced from the website root in html.
 
-#### Code Splitting
+### Code Splitting
 
-Code splitting is supported, however a router is excluded by default as its easy to add one 'as and when' you need one.
+Code splitting is supported, however there is no default router included as its easy to add one 'as and when' you need one. And code splitting should just 'work'.
 
-#### .env
+### .env
 
 An optional `.env` file is supported, however the default implementation is to restrict environment variables available in the react application to values beginning with `REACT_APP_` to reduce the chance of exposing sensitive information by mistake.
 
