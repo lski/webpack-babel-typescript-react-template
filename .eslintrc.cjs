@@ -51,13 +51,25 @@ module.exports = {
 			},
 		},
 		{
-			files: ['./src/*.js', './src/*.jsx'],
+			files: ['*.js', '*.jsx'],
 			extends: [
 				'eslint:recommended',
 				'plugin:react/recommended', // Uses the recommended rules from @eslint-plugin-react
 				'plugin:prettier/recommended',
 			],
 			rules: {
+				semi: ['error', 'always'],
+			},
+		},
+		{
+			parserOptions: {
+				ecmaVersion: 2018, // Allows for the parsing of modern ECMAScript features
+				sourceType: 'script',
+			},
+			files: ['*.cjs'],
+			extends: ['eslint:recommended', 'plugin:prettier/recommended', 'plugin:node/recommended'],
+			rules: {
+				'node/no-unpublished-require': 'off',
 				semi: ['error', 'always'],
 			},
 		},

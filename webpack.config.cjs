@@ -1,10 +1,8 @@
-/* eslint-disable @typescript-eslint/no-use-before-define */
-/* eslint-disable no-undef */
 const webpack = require('webpack');
 const { merge } = require('webpack-merge');
 const path = require('path');
-const fs = require('fs');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+// eslint-disable-next-line node/no-extraneous-require
 const TerserPlugin = require('terser-webpack-plugin');
 const Dashboard = require('webpack-dashboard/plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
@@ -37,11 +35,11 @@ module.exports = function (env = {}, argv = {}) {
 		react(),
 		isDev ? development() : production(),
 		isDevServer && devServer(outputDir, host, port),
-		env.analysis && analysis(),
+		env.analysis && analysis()
 		// add other configurations here
 	);
 
-	if(env.verbose) {
+	if (env.verbose) {
 		console.log(JSON.stringify(config, null, 2));
 	}
 
