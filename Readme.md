@@ -8,10 +8,11 @@ A template for building an SPA with minimal production footprint.
 - Typescript 4.1
 - ESLint 7+
 - Prettier 2+
-- CSS (Optional Sass) Modules
-- React via CDN (Switchable to Preact)
+- React via CDN (Guide to easily switch to Preact)
 
 An alternative to [Create React App (CRA)](https://facebook.github.io/create-react-app/) it is designed for internal use, but available for others to use.
+
+___NB:__ The project deliberately doesnt include styling solution, as many porjects require different use cases, instead it relies on the style tag in React._
 
 ### Public folder for assests
 
@@ -19,19 +20,15 @@ Like with CRA images can either be imported (recommended) or directly added to t
 
 ### Code Splitting
 
-Code splitting is supported, however there is no default router included as its easy to add one 'as and when' you need one. And code splitting should just 'work'.
+Code splitting is supported, as this project is based on webpack, however there is no default router included as its easy to add one 'as and when' you need one. And code splitting should just 'work'.
 
 ### .env
 
 An optional `.env` file is supported, however the default implementation is to restrict environment variables available in the react application to values beginning with `REACT_APP_` to reduce the chance of exposing sensitive information by mistake.
 
-_**NB:** There are guides for switching the tech as well._
-
 ## Setup
 
-- Fork (or clone) the repo
-
-  _If clone please remember to change the remote `origin`._
+- Fork (or clone) the repo _(If clone please remember to change the remote `origin`)._
 
 - Run the following to find out the packages that need updating.
 
@@ -39,9 +36,7 @@ _**NB:** There are guides for switching the tech as well._
     yarn outdated
     ```
 
-    Using the details update the packages that need updated. Obviously depending on what those are e.g. webpack, then you might want to do it incrementally.
-
-    For each package you want to update re-run the install for that package. __NB__ You could also look at [npm-check-updates](https://www.npmjs.org/package/npm-check-updates) which makes it more painless.
+    Using the details update the packages that need updated. Obviously depending on what those are e.g. webpack, then you might want to do it incrementally. __NB__ You could also look at the [`yarn upgrade-interactive --latest`](https://classic.yarnpkg.com/en/docs/cli/upgrade-interactive/) command which makes it more painless.
 
 - Change properties in `package.json` remembering the following.
   - name
@@ -49,23 +44,21 @@ _**NB:** There are guides for switching the tech as well._
   - contributors
   - keywords
 
-- Change the webpage title
-
-    This can be done either directly in the `public/index.html` page, or in the `/webpack.config.js` file.
+- Change the webpage title *(This can be done in the `public/index.html` page).*
 
 ## Settings
 
 All settings are optional and are currently set using the command line
 
-- `--env.host` default `0.0.0.0`
+- `--env.host` (default:  `0.0.0.0`)
 
     The host to run the webpack dev server on, has no effect on production. The default option exposes it on localhost and externally via machine IP.
 
-- `--env.port` default `3030`
+- `--env.port` (default:  `3030`)
 
     The port to run webpack dev server, has no effect on production.
 
-- `--env.outputDir` default `./build`
+- `--env.outputDir` (default: `./build`)
 
     The output directory for all built assests. Gets cleaned (emptied) prior to new build. Can be relative or absolute.
 
@@ -99,35 +92,7 @@ To run the application the scripts are similar to those of Create React App.
 
     Applies auto fixes, where possible, to errors/warnings found by `yarn run lint`.
 
-## How to Extend
-
-### SASS Modules
-
-The wiring for Sass modules is included by default, however to use Sass files:
-
-- Sass files need to have the extension `.scss`
-- `node-sass` needs to installed
-
-Install `node-sass`
-
-```bash
-yarn add node-sass -dev
-```
-
-Thats it.
-
-### Include React Router
-
-Just install the packages to use React Router
-
-- Install `react-router`/`react-router-dom` along with types for Typescript
-
-    ```bash
-    yarn add react-router-dom
-    yarn add -D @types/react-router @types/react-router-dom
-    ```
-
-### Switch to Preact
+## Switch to Preact
 
 Preact is a much smaller implementation of React and for small/medium projects just as good.
 
@@ -193,13 +158,24 @@ _<sup><small>1</small></sup> Preact 10+ includes compat in the main package, how
 
     _**NB:** Preact has its own dev tools extension._
 
-### Switch to StyledComponents
+## Add React Router
+
+Just install the packages to use React Router
+
+- Install `react-router`/`react-router-dom` along with types for Typescript
+
+    ```bash
+    yarn add react-router-dom
+    yarn add -D @types/react-router @types/react-router-dom
+    ```
+
+## Add StyledComponents
 
 Styled Components are great as they enable putting real css in the same file as the Components they are used with.
 
 In reality they dont require a build step, but adding the plugin is recommended as it makes Components easier to see in DevTools.
 
-_**NB:** `node-sass` is not required for styled-components._
+_**NB:** `node-sass` is not required for styled-components or emotion._
 
 - Install Styled Components
 
@@ -235,11 +211,11 @@ _**NB:** `node-sass` is not required for styled-components._
 
     _**NB:** Avoid the plugin `typescript-plugin-styled-components` it seems more obvious than `babel-plugin-styled-components` but we are using babel to transpile the typescript, not ts-loader, so it is not applicable._
 
-### Switch to Emotion
+## Add Emotion
 
 Emotion is very similar to Styled Components, with different trade offs, like it has support for React's concurrency, it also has opt-in for different usages (e.g. css prop or styled) so a smaller footprint and has better TypeScript support. But on the negative still has the component tree of death that styled-components has removed.
 
-- Install emotion
+- Install emotion:
 
     ```bash
     yarn add @emotion/core
@@ -269,19 +245,152 @@ Emotion is very similar to Styled Components, with different trade offs, like it
     }
     ```
 
-### Removing CSS/SASS Modules
+## Add CSS and CSS Modules
 
-Although there is no meed to remove CSS/SASS modules if using styled-components/emotion, as it doesnt effect the build size, it is possible to remove it.
+To be able to import CSS files directly into your code and to take advantage of CSS Modules:
+- Install dependencies
+- Add config section for css
+- Add config section to the pipeline
 
-Remove the following packages
+You can then use `.css` and `.module.css` files to your projects and they will be imported.
 
-- `css-loader`
-- `typings-for-css-modules-loader`
-- `style-loader`
-- `sass-loader`
-- `@teamsupercell/typings-for-css-modules-loader`.
+- Install dependencies:
 
-Also remove the `...createStyleLoaders(),` line from `webpack.base.js` to avoid errors.
+  ```bash
+  yarn add -D css-loader typings-for-css-modules-loader style-loader @teamsupercell/typings-for-css-modules-loader
+  ```
+
+- Add following `css` config to bottom of `webpack.config.js`:
+  ```js
+  const css = () => ({
+  	plugins: [
+  		// WatchIgnorePlugin currently only used only to prevent '--watch' being slow when using   Sass/CSS Modules, remove if not needed
+  		new WatchIgnorePlugin({ paths: [/css\.d\.ts$/] }),
+  	],
+  	module: {
+  		rules: [
+  			// Handles css style modules, requires an extension of ***.module.scss
+  			{
+  				exclude: [/node_modules/],
+  				test: /\module.css$/,
+  				use: [
+  					'style-loader',
+  					'@teamsupercell/typings-for-css-modules-loader',
+  					{
+  						loader: 'css-loader',
+  						options: {
+  							modules: {
+  								localIdentName: '[name]__[local]--[hash:base64:5]',
+  								exportLocalsConvention: 'camelCase',
+  							},
+  						},
+  					},
+  				],
+  			},
+  			// Handles none module css files
+  			{
+  				exclude: [/node_modules/],
+  				test: /(?<!\.module)\.css$/,
+  				use: [
+  					'style-loader',
+  					'@teamsupercell/typings-for-css-modules-loader',
+  					{
+  						loader: 'css-loader',
+  						options: {
+  							modules: {
+  								exportLocalsConvention: 'camelCase',
+  							},
+  						},
+  					},
+  				],
+  			},
+  		],
+  	},
+  });
+  ```
+- Add that config to the webpack.config.js pipeline:
+  ```js
+      let config = combine(
+  		base(pageTitle),
+          // other configurations
+          css(),
+  	);
+  ```
+
+
+## Add Sass & Sass Modules
+
+Similar to the steps to add CSS files directly to be able to import CSS files directly into your code and to take advantage of SASS Modules:
+- Install dependencies
+- Add config section for css
+- Add config section to the pipeline
+
+You can then use `.scss` and `.module.scss` files to your projects and they will be imported.
+
+- Install dependencies:
+
+  ```bash
+  yarn add -D css-loader typings-for-css-modules-loader style-loader @teamsupercell/typings-for-css-modules-loader node-sass sass-loader
+  ```
+
+- Add following `sass` config to bottom of `webpack.config.js`:
+  ```js
+  const sass = () => ({
+  	plugins: [
+  		// WatchIgnorePlugin currently only used only to prevent '--watch' being slow when using   Sass/CSS Modules, remove if not needed
+  		new WatchIgnorePlugin({ paths: [/scss\.d\.ts$/] }),
+  	],
+  	module: {
+  		rules: [
+  			// Handles sass modules, requires an extension of ***.module.scss
+  			{
+  				exclude: [/node_modules/],
+  				test: /\module.scss$/,
+  				use: [
+  					'style-loader',
+  					'@teamsupercell/typings-for-css-modules-loader',
+  					{
+  						loader: 'css-loader',
+  						options: {
+  							modules: {
+  								localIdentName: '[name]__[local]--[hash:base64:5]',
+  								exportLocalsConvention: 'camelCase',
+  							},
+  						},
+  					},
+  					'sass-loader',
+  				],
+  			},
+  			// Handles none module scss files
+  			{
+  				exclude: [/node_modules/],
+  				test: /(?<!\.module)\.scss$/,
+  				use: [
+  					'style-loader',
+  					'@teamsupercell/typings-for-css-modules-loader',
+  					{
+  						loader: 'css-loader',
+  						options: {
+  							modules: {
+  								exportLocalsConvention: 'camelCase',
+  							},
+  						},
+  					},
+  					'sass-loader',
+  				],
+  			},
+  		],
+  	},
+  });
+  ```
+- Add that config to the webpack.config.js pipeline:
+  ```js
+      let config = combine(
+  		base(pageTitle),
+          // other configurations
+          sass(),
+  	);
+  ```
 
 ## Roadmap
 

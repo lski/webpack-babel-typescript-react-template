@@ -1,12 +1,23 @@
-import React, { useState } from 'react';
-import css from './App.module.css';
+import React, { CSSProperties, useState } from 'react';
 import logo from './logo.svg';
+
+const style: CSSProperties = {
+	backgroundColor: 'rgb(31, 29, 54)',
+	color: '#f7f7f7',
+	fontSize: '16px',
+	fontFamily: 'Roboto,Helvetica,Arial,sans-serif',
+	minHeight: '100vh',
+	display: 'flex',
+	justifyContent: 'center',
+	alignItems: 'center',
+	flexDirection: 'column',
+};
 
 export function App(): JSX.Element {
 	const [msg, setMsg] = useState<string>('Hello World');
 
 	return (
-		<div className={css.app}>
+		<div style={style}>
 			<img src={logo} alt="It's a logo"></img>
 			<p>{msg}</p>
 			<button onClick={() => setMsg("It's a whole new world as I have been clicked!")}>Click Me!</button>
