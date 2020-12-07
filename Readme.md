@@ -96,14 +96,14 @@ To run the application the scripts are similar to those of Create React App.
 
 <details>
 <summary>Switch to Preact</summary>
-    
+
 Preact is a much smaller, and simplier, implementation of React and for small/medium projects just as good.
 
 There are some limitations however, as of 10.4.1, `Suspense`/`lazy` is not fully stable yet, so requires a fallback to an `asyncComponent` implementation or `@loadable/component`.</sup>.
 
 Although it is possible to use it via CDN, due to its small size its often beneficial to bundle it with your output instead, then you can take advantage of tree-shaking preact. _(__NB:__ To use it with a CDN see this [github comment](https://github.com/preactjs/preact/issues/2719#issuecomment-681094811))._
 
-- Install `preact` 
+- Install `preact`
 
     ```bash
     yarn add preact
@@ -143,7 +143,7 @@ Although it is possible to use it via CDN, due to its small size its often benef
 
     ```html
     <!-- public/index.html -->
-    <!-- 
+    <!--
     <script crossorigin src="https://unpkg.com/react@16.13/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@16.13/umd/react-dom.production.min.js"></script>
     -->
@@ -165,12 +165,12 @@ Although it is possible to use it via CDN, due to its small size its often benef
     ```
 
     _**NB:** Preact has its own dev tools extension._
-    
+
 </details>
 
 <details>
 <summary>Add React Router</summary>
-    
+
 Just install the packages to use React Router
 
 - Install `react-router`/`react-router-dom` along with types for Typescript
@@ -333,6 +333,9 @@ You can then use `.css` and `.module.css` files to your projects and they will b
       css(),
   );
   ```
+
+_**NB:** Generally we would exclude auto generated files from git in the `.gitignore` file. However on 'first build' types for the css modules files are not created by the plugin until after the build, meaning it will possibly fail in CI builds, so its not recommended._
+
 </details>
 
 <details>
@@ -409,29 +412,31 @@ You can then use `.scss` and `.module.scss` files to your projects and they will
       sass(),
   );
   ```
+
+_**NB:** Generally we would exclude auto generated files from git in the `.gitignore` file. However on 'first build' types for the css modules files are not created by the plugin until after the build, meaning it will possibly fail in CI builds, so its not recommended._
 </details>
 
 ## Roadmap
 
 It would be ideal if:
 
+- I will add a module/nomodule split for output as soon as it lands in webpack 5+
+- Consider adding husky hooks. The only reason not too is that it can be bypassed.
+- Add Dockerfile for docker development
 - This project either prepared for testing or added generic testing in ready for the developer, but need to decide on Cypress or Jest.
-- Investigate not excluding the created `*.(scss|css).d.ts` files from source control, as it fixes errors on first build, useful for CI/CD pipelines.
-- Investigate how useful an automatic check on whether preact or node-sass has been installed to add the correct webpack configurations automatically
-- Add manifest files to public
+- Add manifest files to public for PWA support
 - Add favicon to public
   - Add it to index.html
 - Consider using TS throughout for building the code. E.g. ts-node
 - Do more tests on exporting fonts to the outputDir
 - Investigate source maps relating to the original, rather than webpack output
 - Investigate whether storybook is worthwhile for the template.
-- Add Dockerfile for docker development
+    - Or is an install guide better?
 - Update .env file for development and have them work with webpack
   - Port
   - Host
   - Page tile
   - outputDir
-- Consider adding husky hooks. The only reason not too is that it can be bypassed.
 - Add setting for dataurl size
 - Add a baseUrl setting (in a similar way to the way PUBLIC_URL works for CRA)
 - Consider the ExtractTextPlugin for CSS/SASS imports (NB: The benefits arent as good as first seems.)

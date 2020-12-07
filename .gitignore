@@ -4,10 +4,5 @@ report
 node_modules
 .env
 
-# generated css/scss type files
-**/*.scss.d.ts
-**/*.css.d.ts
-
-
 #vscode
 .vscode/settings.*
