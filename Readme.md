@@ -12,7 +12,7 @@ A template for building an SPA with minimal production footprint.
 
 An alternative to [Create React App (CRA)](https://facebook.github.io/create-react-app/) it is designed for internal use, but available for others to use.
 
-___NB:__ The project deliberately doesnt include a styling solution, as many porjects require different use cases, instead it relies on the style tag in React._
+___NB:__ The project deliberately doesnt include a styling solution, as many projects require different use cases, instead it relies on the style tag in React._
 
 ### Public folder for assests
 
