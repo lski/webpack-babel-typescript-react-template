@@ -12,7 +12,7 @@ A template for building an SPA with minimal production footprint.
 
 An alternative to [Create React App (CRA)](https://facebook.github.io/create-react-app/) it is designed for internal use, but available for others to use.
 
-___NB:__ The project deliberately doesnt include styling solution, as many porjects require different use cases, instead it relies on the style tag in React._
+___NB:__ The project deliberately doesnt include a styling solution, as many porjects require different use cases, instead it relies on the style tag in React._
 
 ### Public folder for assests
 
@@ -92,47 +92,18 @@ To run the application the scripts are similar to those of Create React App.
 
     Applies auto fixes, where possible, to errors/warnings found by `yarn run lint`.
 
-## Switch to Preact
+## Extending Features
 
-Preact is a much smaller implementation of React and for small/medium projects just as good.
+<details>
+<summary>Switch to Preact</summary>
+    
+Preact is a much smaller, and simplier, implementation of React and for small/medium projects just as good.
 
-There are some limitations however, as of 10.4.1, `Suspense`/`lazy` is not stable yet, so requires a fallback to an `asyncComponent` implementation or `@loadable/component` and unlike React is not currently possible to use CDN<sup><small>1</small></sup>.
+There are some limitations however, as of 10.4.1, `Suspense`/`lazy` is not fully stable yet, so requires a fallback to an `asyncComponent` implementation or `@loadable/component`.</sup>.
 
-_<sup><small>1</small></sup> Preact 10+ includes compat in the main package, however it doesnt expose it via its UMD build. And the old preact/compat no longer works with Preact 10+. You could always use Preact as Preact directly to combat that though._
+Although it is possible to use it via CDN, due to its small size its often beneficial to bundle it with your output instead, then you can take advantage of tree-shaking preact. _(__NB:__ To use it with a CDN see this [github comment](https://github.com/preactjs/preact/issues/2719#issuecomment-681094811))._
 
-- Add Aliases to webpack to tell it to use `preact/compat` when asking for React
-
-    ```js
-    // webpack.config.js
-    resolve: {
-        alias: {
-            'react': 'preact/compat',
-            'react-dom/test-utils': 'preact/test-utils',
-            'react-dom': 'preact/compat', // Must be below test-utils
-        },
-    }
-    ```
-
-- Remove (or comment out) externals
-
-    ```js
-    // webpack.config.js
-    //  externals: {
-    //      'react': 'React',
-    //      'react-dom': 'ReactDOM'
-    //  },
-    ```
-
-- Remove (or comment out) external CDN script tags
-
-    ```html
-    <!-- public/index.html
-    <script crossorigin src="https://unpkg.com/react@16.13/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@16.13/umd/react-dom.production.min.js"></script>
-    -->
-    ```
-
-- Add `preact` package
+- Install `preact` 
 
     ```bash
     yarn add preact
@@ -140,11 +111,48 @@ _<sup><small>1</small></sup> Preact 10+ includes compat in the main package, how
 
     _**NB:** We dont remove the `react-dom` package, because we have used aliases it wont be picked up by webpack, it tricks typescript into thinking it exists._
 
+
+- Add a preact build configuration to `webpack.config.js`
+
+    ```js
+    // webpack.config.js
+    const preact = () => ({
+        resolve: {
+            alias: {
+                'react': 'preact/compat',
+                'react-dom/test-utils': 'preact/test-utils',
+                'react-dom': 'preact/compat', // Must be below test-utils
+            },
+        }
+    });
+    ```
+
+- Switch the react configuration for the preact configuration in the pipeline
+
+  ```js
+  // webpack.config.js
+  let config = combine(
+      base(pageTitle),
+      // react(),
+      preact(),
+      // ... other configurations
+  );
+  ```
+
+- Remove (or comment out) external CDN script tags for React
+
+    ```html
+    <!-- public/index.html -->
+    <!-- 
+    <script crossorigin src="https://unpkg.com/react@16.13/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16.13/umd/react-dom.production.min.js"></script>
+    -->
+    ```
+
 - (Optional) Add loadable to make up for Suspense/lazy
 
     ```bash
-    yarn add @loadable/component
-    yarn add @types/loadable__component -D
+    yarn add @loadable/component && yarn add @types/loadable__component -D
     ```
 
 - (Optional) Add the ability to use Preact DevTools
@@ -157,9 +165,12 @@ _<sup><small>1</small></sup> Preact 10+ includes compat in the main package, how
     ```
 
     _**NB:** Preact has its own dev tools extension._
+    
+</details>
 
-## Add React Router
-
+<details>
+<summary>Add React Router</summary>
+    
 Just install the packages to use React Router
 
 - Install `react-router`/`react-router-dom` along with types for Typescript
@@ -168,8 +179,10 @@ Just install the packages to use React Router
     yarn add react-router-dom
     yarn add -D @types/react-router @types/react-router-dom
     ```
+</details>
 
-## Add StyledComponents
+<details>
+<summary>Add StyledComponents</summary>
 
 Styled Components are great as they enable putting real css in the same file as the Components they are used with.
 
@@ -210,8 +223,10 @@ _**NB:** `node-sass` is not required for styled-components or emotion._
     ```
 
     _**NB:** Avoid the plugin `typescript-plugin-styled-components` it seems more obvious than `babel-plugin-styled-components` but we are using babel to transpile the typescript, not ts-loader, so it is not applicable._
+</details>
 
-## Add Emotion
+<details>
+<summary>Add Emotion</summary>
 
 Emotion is very similar to Styled Components, with different trade offs, like it has support for React's concurrency, it also has opt-in for different usages (e.g. css prop or styled) so a smaller footprint and has better TypeScript support. But on the negative still has the component tree of death that styled-components has removed.
 
@@ -244,8 +259,10 @@ Emotion is very similar to Styled Components, with different trade offs, like it
         ]
     }
     ```
+</details>
 
-## Add CSS and CSS Modules
+<details>
+<summary>Add CSS and CSS Modules</summary>
 
 To be able to import CSS files directly into your code and to take advantage of CSS Modules:
 - Install dependencies
@@ -310,15 +327,16 @@ You can then use `.css` and `.module.css` files to your projects and they will b
   ```
 - Add that config to the webpack.config.js pipeline:
   ```js
-      let config = combine(
-  		base(pageTitle),
-          // other configurations
-          css(),
-  	);
+  let config = combine(
+      base(pageTitle),
+      // other configurations
+      css(),
+  );
   ```
+</details>
 
-
-## Add Sass & Sass Modules
+<details>
+<summary>Add Sass & Sass Modules</summary>
 
 Similar to the steps to add CSS files directly to be able to import CSS files directly into your code and to take advantage of SASS Modules:
 - Install dependencies
@@ -385,12 +403,13 @@ You can then use `.scss` and `.module.scss` files to your projects and they will
   ```
 - Add that config to the webpack.config.js pipeline:
   ```js
-      let config = combine(
-  		base(pageTitle),
-          // other configurations
-          sass(),
-  	);
+  let config = combine(
+      base(pageTitle),
+      // other configurations
+      sass(),
+  );
   ```
+</details>
 
 ## Roadmap
 
