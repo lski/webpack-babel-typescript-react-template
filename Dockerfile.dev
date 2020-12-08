@@ -1,0 +1,23 @@
+#==================== Building Stage=======================#
+# Create the image based on the official Node 10 image from Dockerhub
+FROM node:14.15.1-alpine3.12 as node
+
+# Create a new directory
+RUN mkdir -p /app
+
+# Change directory so that our commands run inside this new directory
+WORKDIR /app
+
+# Copy dependency definitions
+COPY package.json yarn.lock /app/
+
+# Install dependencies using npm
+RUN yarn install --frozen-lockfile
+
+# Get all the code needed to run the ap
+COPY . /app/
+
+EXPOSE 80
+
+# Run webpack dev server
+CMD yarn run start --env port=80

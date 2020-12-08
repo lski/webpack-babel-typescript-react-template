@@ -70,6 +70,12 @@ module.exports = {
 			extends: ['eslint:recommended', 'plugin:prettier/recommended', 'plugin:node/recommended'],
 			rules: {
 				'node/no-unpublished-require': 'off',
+				'node/no-unsupported-features/es-syntax': [
+					'error',
+					{
+						version: '>=12.0.0',
+					},
+				],
 				semi: ['error', 'always'],
 			},
 		},

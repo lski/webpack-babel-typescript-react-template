@@ -21,9 +21,7 @@ dotenv.config();
  */
 module.exports = function (env = {}, argv = {}) {
 	// Settings
-	const outputDir = path.resolve(env.outputDir || './build');
-	const port = parseInt(env.port, 10) || 3030;
-	const host = env.host || '0.0.0.0';
+	const { outputDir, port, host } = resolveSettings(env);
 
 	// Mode
 	const isDev = argv.mode !== 'production';
@@ -249,8 +247,25 @@ const combine = (...configs) =>
  */
 const sanitizeEnvironmentVariables = (env) =>
 	Object.keys(env)
-		.filter((key) => /^REACT_APP_/i.test(key))
+		.filter((key) => /^WPT_APP_/i.test(key))
 		.reduce((output, key) => {
 			output[key] = `"${env[key]}"`;
 			return output;
 		}, {});
+
+/**
+ * Accepts an env object from the command line and tries to resolve the settings
+ *
+ * @param {*} env
+ */
+const resolveSettings = (env) => {
+	// Attenpt to ensure the options are not going to throw an null error
+	const options = { ...env };
+	options.server = { ...options.server };
+
+	return {
+		outputDir: path.resolve(options.outputDir || process.env.WPT_OUTPUT_DIR || './build'),
+		port: parseInt(options.server.port, 10) || parseInt(process.env.WPT_SERVER_PORT, 10) || 3030,
+		host: options.server.host || process.env.WPT_SERVER_HOST || '0.0.0.0',
+	};
+};
