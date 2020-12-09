@@ -485,7 +485,6 @@ _**Note:** Generally we would exclude auto generated files from git in the `.git
 It would be ideal if:
 
 -   I will add a module/nomodule split for output as soon as it lands in webpack 5+
--   Consider adding husky hooks. The only reason not too is that it can be bypassed.
 -   Add Dockerfile for docker development
 -   This project either prepared for testing or added generic testing in ready for the developer, but need to decide on Cypress or Jest.
 -   Add manifest files to public for PWA support
@@ -496,11 +495,6 @@ It would be ideal if:
 -   Investigate source maps relating to the original, rather than webpack output
 -   Investigate whether storybook is worthwhile for the template.
     -   Or is an install guide better?
--   Update .env file for development and have them work with webpack
-    -   Port
-    -   Host
-    -   Page tile
-    -   outputDir
 -   Add setting for dataurl size
 -   Add a baseUrl setting (in a similar way to the way PUBLIC_URL works for CRA)
 -   Consider the ExtractTextPlugin for CSS/SASS imports (Note: The benefits arent as good as first seems.)
