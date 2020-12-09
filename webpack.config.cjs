@@ -21,10 +21,11 @@ dotenv.config();
  */
 module.exports = function (env = {}, argv = {}) {
 	// Settings
-	const { outputDir, serverHost, serverPort } = resolveSettings(env);
+	const { outputDir, serverHost, serverPort, analysis } = resolveSettings(env);
 
 	// Mode
-	const isDev = argv.mode !== 'production';
+	const mode = argv.mode || 'development';
+	const isDev = mode !== 'production';
 	const isDevServer = !!process.env.WEBPACK_DEV_SERVER;
 
 	let config = combine(
@@ -33,7 +34,7 @@ module.exports = function (env = {}, argv = {}) {
 		react(),
 		isDev ? development() : production(),
 		isDevServer && devServer(outputDir, serverHost, serverPort),
-		env.analysis && analysis()
+		analysis && report(mode)
 		// add other configurations here
 	);
 
@@ -143,12 +144,12 @@ const base = () => ({
  *
  * @returns {import('webpack').Configuration}
  */
-const analysis = (mode = 'static') => ({
+const report = (environment, open = false, mode = 'static') => ({
 	plugins: [
 		new BundleAnalyzerPlugin({
 			analyzerMode: mode,
-			openAnalyzer: false,
-			reportFilename: '../report/index.html',
+			openAnalyzer: open,
+			reportFilename: `../report/${environment}.html`,
 		}),
 	],
 });
@@ -157,6 +158,7 @@ const analysis = (mode = 'static') => ({
  * @type {import('webpack').Configuration}
  */
 const production = () => ({
+	mode: 'production',
 	devtool: 'cheap-source-map',
 	optimization: {
 		minimize: true,
@@ -264,9 +266,11 @@ const resolveSettings = (env) => {
 	const outputDir = path.resolve(env.outputDir || process.env.WPT_OUTPUT_DIR || './build');
 	const serverHost = (env.server && env.server.host) || process.env.WPT_SERVER_HOST || '0.0.0.0';
 	const serverPort = parseInt((env.server && env.server.port) || process.env.WPT_SERVER_PORT, 10) || 3030;
+	const analysis = env.analysis === true || process.env.WPT_BUILD_ANALYSIS === 'true' || false;
 
 	return {
 		outputDir,
+		analysis,
 		serverHost,
 		serverPort,
 	};

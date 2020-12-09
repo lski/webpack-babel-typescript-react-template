@@ -3,53 +3,67 @@
 A template for building an SPA with minimal production footprint.
 
 -   Yarn
--   Webpack 5
--   Babel 7+
--   Typescript 4.1
--   ESLint 7+
--   Prettier 2+
+-   Webpack 5+
+-   Babel 7.10+
+-   Typescript 4.1+
+-   ESLint
+-   Prettier
 -   React via CDN (Guide to easily switch to Preact)
 
-An alternative to [Create React App (CRA)](https://facebook.github.io/create-react-app/) it is designed for internal use, but available for others to use.
+An alternative to [Create React App (CRA)](https://facebook.github.io/create-react-app/) it is designed for personal use, but available for others to use.
 
-**\_NB:** The project deliberately doesnt include a styling solution, as many projects require different use cases, instead it relies on the style tag in React.\_
+### Out the Box Features
 
-### Public folder for assests
+-   Code splitting (provided by webpack) when dynamic imports `import()` is used
+-   Using a `.env` file to set your environment variables.
+-   \_`import`ing images into code
+-   Browserlist support
+-   Eslint linting and prettier with pre-commit hooks to ensure code quality
+-   Container (dockerfile) support
+-   Bundle analysis
 
-Like with CRA images can either be imported (recommended) or directly added to the public folder. Anything in the public folder will get copied to the outputDir (see [settings](#settings)) and can be referenced from the website root in html.
-
-### Code Splitting
-
-Code splitting is supported, as this project is based on webpack, however there is no default router included as its easy to add one 'as and when' you need one. And code splitting should just 'work'.
-
-### .env
-
-An optional `.env` file is supported, however the default implementation is to restrict environment variables available in the react application to values beginning with `REACT_APP_` to reduce the chance of exposing sensitive information by mistake.
+_**Note:** This project intentionally offers minimal features its build, but with guides to add features, such as styling, because many projects require different use cases._
 
 ## Setup
 
--   Fork (or clone) the repo _(If clone please remember to change the remote `origin`)._
+-   Get code
 
--   Run the following to find out the packages that need updating.
+    ```bash
+    # Clone
+    git clone git@github.com:lski/webpack-babel-typescript-react-template.git
 
-    ```js
-    yarn outdated
+    # Remove the remote, which points at the template code
+    git remote remove origin
+
+    # Update packages
+    yarn upgrade-interactive --latest # or `yarn outdated`
     ```
 
-    Using the details update the packages that need updated. Obviously depending on what those are e.g. webpack, then you might want to do it incrementally. **NB** You could also look at the [`yarn upgrade-interactive --latest`](https://classic.yarnpkg.com/en/docs/cli/upgrade-interactive/) command which makes it more painless.
-
--   Change properties in `package.json` remembering the following.
+-   Change fields in `package.json`:
 
     -   name
     -   description
     -   contributors
     -   keywords
 
--   Change the webpage title _(This can be done in the `public/index.html` page)._
+-   Remove everything above this comment ;) and replace it with your project information :)
 
-## Settings & Environment Variables
+## Scripts
 
-All settings are optional and are set using the command line:
+To run the application the scripts are similar to those of Create React App.
+
+-   `yarn run start` Starts a development build using `webpack-dev-server`
+-   `yarn run build` Creates a minified production ready build
+-   `yarn run build:dev` Similar to `build` but creates an unoptimised development ready build.
+-   `yarn run lint` Runs eslint on the code, highlighting any errors/warnings.
+-   `yarn run lint:fix` Applies auto fixes, where possible, to errors/warnings found by `yarn run lint`.
+-   `yarn run analysis`
+
+    Uses `webpack-bundle-analyzer` to create a report on both the development & production builds. To view the reports naigate to `/report` and open the html files.
+
+## Settings
+
+All settings are optional and are set using the command line (via webpacks --env flag) or environment variables:
 
 -   `--env server.host=0.0.0.0` (default: `0.0.0.0`)
 
@@ -63,45 +77,20 @@ All settings are optional and are set using the command line:
 
     The output directory for all built assests. Gets cleaned (emptied) prior to new build. Can be relative or absolute.
 
-Settings can also be set as Environment variables:
+-   `--env analysis` (default: false)
+
+    Creates a bundle report for the current build. See `yarn run analysis`
+
+Environment variables settings:
 
 -   `server.host` -> `WPT_SERVER_HOST`
 -   `server.port` -> `WPT_SERVER_PORT`
 -   `outputDir` -> `WPT_OUTPUT_DIR`
+-   `analysis` -> `WPT_BUILD_ANALYSIS=true`
 
-_**NB:** Command line supersedes Environment Variables._
+_**Note:** Command line supersedes Environment Variables._
 
-**Warning:** These settings are not effected in the production docker container.
-
-## Scripts
-
-To run the application the scripts are similar to those of Create React App.
-
--   `yarn run start`
-
-    Starts a development build using `webpack-dev-server` on local hosts `0.0.0.0` and port `3030`, these can be overriden on the command line using `--env.host 127.0.0.1` and `--env.port 8080`.
-
--   `yarn run build`
-
-    Will create a production ready build in selected outputDir. The outputDir is `/build` by default, but can be overriden by `--env.outputDir`.
-
--   `yarn run build:dev`
-
-    Similar to `build` but creates a larger development ready build.
-
--   `yarn run analysis`
-
-    Creates a development ready build in selected outputDir (`/build` by default) but also an analysis file in the `/report` folder that can be viewed in a browser that shows a breakdown of the modules in each bundle and their sizes. Uses `webpack-bundle-analyzer` to create the report.
-
-    If you desire a breakdown based off the production build run `yarn run build --env.analysis` instead, that will show whats actually deployed.
-
--   `yarn run lint`
-
-    Runs eslint on the code, highlighting any errors/warnings.
-
--   `yarn run lint:fix`
-
-    Applies auto fixes, where possible, to errors/warnings found by `yarn run lint`.
+_**Tip:** Use an .env in local development mode._
 
 ## Docker
 
@@ -143,7 +132,6 @@ To build a production version and run:
 
 ```bash
 # Build the image.
-
 docker build --tag wpt:1.0.0 .
 ```
 
@@ -155,7 +143,7 @@ docker run -p 8080:80 -d --name wpt-1 wpt:1.0.0
 <details>
 <summary>Explanation</summary>
 
-We start by creating an image with a name (wpt) and version (1.0.0) that can be changed as needed NB: You should increment your version numbers as you make changes to avoid conflicts.
+We start by creating an image with a name (wpt) and version (1.0.0) that can be changed as needed Note: You should increment your version numbers as you make changes to avoid conflicts.
 
 We create and run a container, calling it `wpt-1` from the production build `1.0.0` we created earlier. Remember that container names should be unique, so if you are going to run multiple containers then remember to change the name for each e.g. wpt-2, wpt-3, etc.
 
@@ -172,7 +160,7 @@ Preact is a much smaller, and simplier, implementation of React and for small/me
 
 There are some limitations however, as of 10.4.1, `Suspense`/`lazy` is not fully stable yet, so requires a fallback to an `asyncComponent` implementation or `@loadable/component`.</sup>.
 
-Although it is possible to use it via CDN, due to its small size its often beneficial to bundle it with your output instead, then you can take advantage of tree-shaking preact. _(**NB:** To use it with a CDN see this [github comment](https://github.com/preactjs/preact/issues/2719#issuecomment-681094811))._
+Although it is possible to use it via CDN, due to its small size its often beneficial to bundle it with your output instead, then you can take advantage of tree-shaking preact. _(**Note:** To use it with a CDN see this [github comment](https://github.com/preactjs/preact/issues/2719#issuecomment-681094811))._
 
 -   Install `preact`
 
@@ -180,7 +168,7 @@ Although it is possible to use it via CDN, due to its small size its often benef
     yarn add preact
     ```
 
-    _**NB:** We dont remove the `react-dom` package, because we have used aliases it wont be picked up by webpack, it tricks typescript into thinking it exists._
+    _**Note:** We dont remove the `react-dom` package, because we have used aliases it wont be picked up by webpack, it tricks typescript into thinking it exists._
 
 -   Add a preact build configuration to `webpack.config.js`
 
@@ -234,7 +222,7 @@ Although it is possible to use it via CDN, due to its small size its often benef
     }
     ```
 
-    _**NB:** Preact has its own dev tools extension._
+    _**Note:** Preact has its own dev tools extension._
 
 </details>
 
@@ -259,7 +247,7 @@ Styled Components are great as they enable putting real css in the same file as 
 
 In reality they dont require a build step, but adding the plugin is recommended as it makes Components easier to see in DevTools.
 
-_**NB:** `node-sass` is not required for styled-components or emotion._
+_**Note:** `node-sass` is not required for styled-components or emotion._
 
 -   Install Styled Components
 
@@ -293,7 +281,7 @@ _**NB:** `node-sass` is not required for styled-components or emotion._
         }
         ```
 
-        _**NB:** Avoid the plugin `typescript-plugin-styled-components` it seems more obvious than `babel-plugin-styled-components` but we are using babel to transpile the typescript, not ts-loader, so it is not applicable._
+        _**Note:** Avoid the plugin `typescript-plugin-styled-components` it seems more obvious than `babel-plugin-styled-components` but we are using babel to transpile the typescript, not ts-loader, so it is not applicable._
 
     </details>
 
@@ -309,7 +297,7 @@ Emotion is very similar to Styled Components, with different trade offs, like it
     yarn add -D @emotion/babel-preset-css-prop babel-plugin-emotion
     ```
 
-    _**NB:** The documentation is confusing on supporting the css prop, it requires `@emotion/babel-preset-css-prop` not just the `babel-plugin-emotion` package, which enables performance/debug benefits. This is probably because the other alternative is the @jsx pragma, but this isnt that clear._
+    _**Note:** The documentation is confusing on supporting the css prop, it requires `@emotion/babel-preset-css-prop` not just the `babel-plugin-emotion` package, which enables performance/debug benefits. This is probably because the other alternative is the @jsx pragma, but this isnt that clear._
 
 -   (Optional) Install styled
 
@@ -408,7 +396,7 @@ You can then use `.css` and `.module.css` files to your projects and they will b
     );
     ```
 
-_**NB:** Generally we would exclude auto generated files from git in the `.gitignore` file. However on 'first build' types for the css modules files are not created by the plugin until after the build, meaning it will possibly fail in CI builds, so its not recommended._
+_**Note:** Generally we would exclude auto generated files from git in the `.gitignore` file. However on 'first build' types for the css modules files are not created by the plugin until after the build, meaning it will possibly fail in CI builds, so its not recommended._
 
 </details>
 
@@ -488,7 +476,7 @@ You can then use `.scss` and `.module.scss` files to your projects and they will
     );
     ```
 
-_**NB:** Generally we would exclude auto generated files from git in the `.gitignore` file. However on 'first build' types for the css modules files are not created by the plugin until after the build, meaning it will possibly fail in CI builds, so its not recommended._
+_**Note:** Generally we would exclude auto generated files from git in the `.gitignore` file. However on 'first build' types for the css modules files are not created by the plugin until after the build, meaning it will possibly fail in CI builds, so its not recommended._
 
 </details>
 
@@ -515,4 +503,4 @@ It would be ideal if:
     -   outputDir
 -   Add setting for dataurl size
 -   Add a baseUrl setting (in a similar way to the way PUBLIC_URL works for CRA)
--   Consider the ExtractTextPlugin for CSS/SASS imports (NB: The benefits arent as good as first seems.)
+-   Consider the ExtractTextPlugin for CSS/SASS imports (Note: The benefits arent as good as first seems.)

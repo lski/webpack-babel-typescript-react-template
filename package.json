@@ -5,13 +5,13 @@
 	"main": "dist/app.js",
 	"type": "module",
 	"scripts": {
-		"start": "npx webpack serve",
-		"analysis": "yarn run build:dev --env.analysis",
-		"build": "npx webpack --mode=\"production\"",
-		"build:dev": "npx webpack",
-		"test": "echo \"Error: no test specified\" && exit 1",
-		"lint": "npx eslint ./",
-		"lint:fix": "yarn run lint --fix"
+		"analysis": "yarn run build:dev --env analysis && yarn run build --env analysis",
+		"build": "yarn run webpack --mode=\"production\"",
+		"build:dev": "yarn run webpack",
+		"lint": "yarn run eslint ./",
+		"lint:fix": "yarn run lint --fix",
+		"start": "yarn run webpack serve",
+		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"contributors": [],
 	"keywords": [],
