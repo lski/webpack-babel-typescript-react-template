@@ -21,7 +21,7 @@ dotenv.config();
  */
 module.exports = function (env = {}, argv = {}) {
 	// Settings
-	const { outputDir, port, host } = resolveSettings(env);
+	const { outputDir, serverHost, serverPort } = resolveSettings(env);
 
 	// Mode
 	const isDev = argv.mode !== 'production';
@@ -32,7 +32,7 @@ module.exports = function (env = {}, argv = {}) {
 		umdOutput(outputDir),
 		react(),
 		isDev ? development() : production(),
-		isDevServer && devServer(outputDir, host, port),
+		isDevServer && devServer(outputDir, serverHost, serverPort),
 		env.analysis && analysis()
 		// add other configurations here
 	);
@@ -256,16 +256,18 @@ const sanitizeEnvironmentVariables = (env) =>
 /**
  * Accepts an env object from the command line and tries to resolve the settings
  *
- * @param {*} env
+ * @param {{ server?: { host?: string; port?: number; }; outputDir?: string }} env
+ * @returns {{ serverHost: string; serverPort: number; outputDir: string }}
  */
 const resolveSettings = (env) => {
 	// Attenpt to ensure the options are not going to throw an null error
-	const options = { ...env };
-	options.server = { ...options.server };
+	const outputDir = path.resolve(env.outputDir || process.env.WPT_OUTPUT_DIR || './build');
+	const serverHost = (env.server && env.server.host) || process.env.WPT_SERVER_HOST || '0.0.0.0';
+	const serverPort = parseInt((env.server && env.server.port) || process.env.WPT_SERVER_PORT, 10) || 3030;
 
 	return {
-		outputDir: path.resolve(options.outputDir || process.env.WPT_OUTPUT_DIR || './build'),
-		port: parseInt(options.server.port, 10) || parseInt(process.env.WPT_SERVER_PORT, 10) || 3030,
-		host: options.server.host || process.env.WPT_SERVER_HOST || '0.0.0.0',
+		outputDir,
+		serverHost,
+		serverPort,
 	};
 };
