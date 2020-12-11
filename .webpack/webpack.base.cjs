@@ -19,7 +19,7 @@ const base = () => ({
 			// JS/TS Files
 			{
 				exclude: [/node_modules/],
-				test: /\.jsx?|\.tsx?$/,
+				test: /(\.[jt]sx?)$/,
 				use: {
 					loader: 'babel-loader',
 				},
