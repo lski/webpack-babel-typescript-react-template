@@ -16,7 +16,7 @@ An alternative to [Create React App (CRA)](https://facebook.github.io/create-rea
 
 -   Code splitting (provided by webpack) when dynamic imports `import()` is used
 -   Using a `.env` file to set your environment variables.
--   \_`import`ing images into code
+-   `import`ing images into code
 -   Browserlist support
 -   Eslint linting and prettier with pre-commit hooks to ensure code quality
 -   Container (dockerfile) support
@@ -158,22 +158,27 @@ We have exposed the nginx website inside the container on port 8080 on out machi
 
 Preact is a much smaller, and simplier, implementation of React and for small/medium projects just as good.
 
-There are some limitations however, as of 10.4.1, `Suspense`/`lazy` is not fully stable yet, so requires a fallback to an `asyncComponent` implementation or `@loadable/component`.</sup>.
+There are some limitations however, as of 10.4.1, `Suspense`/`lazy` is not fully stable yet, so requires a fallback to an `asyncComponent` implementation or the `@loadable/component` package.
 
-Although it is possible to use it via CDN, due to its small size its often beneficial to bundle it with your output instead, then you can take advantage of tree-shaking preact. _(**Note:** To use it with a CDN see this [github comment](https://github.com/preactjs/preact/issues/2719#issuecomment-681094811))._
+You can use preact in several ways. You can use a CDN [see this github comment](https://github.com/preactjs/preact/issues/2719#issuecomment-681094811) and have it as an `external` package. It is also possible to use it as 'preact' or to use it was a drop in replacement to React, so that it can be used with React plugins e.g. React Router.
+
+If you want to use preact as preact and not as react, then update the tsconfig.json file as shown [here](https://preactjs.com/guide/v10/typescript/). This project uses a babel toolchain to convert jsx, rather than typescript so keep it as `jsx: "preserve"` as per the instructions.
+
+Below is a guide to add preact as a drop in for react.
 
 -   Install `preact`
 
     ```bash
     yarn add preact
+    yarn remove react
     ```
 
     _**Note:** We dont remove the `react-dom` package, because we have used aliases it wont be picked up by webpack, it tricks typescript into thinking it exists._
 
--   Add a preact build configuration to `webpack.config.js`
+-   Add a build configuration for preact to tell it to pretend to be react:
 
     ```js
-    // webpack.config.js
+    // build/webpack.preact.cjs
     const preact = () => ({
     	resolve: {
     		alias: {
@@ -183,12 +188,18 @@ Although it is possible to use it via CDN, due to its small size its often benef
     		},
     	},
     });
+
+    module.exports = { preact };
     ```
 
--   Switch the react configuration for the preact configuration in the pipeline
+-   Switch the react configuration in webpack to the preact configuration in the main webpack configuration file:
 
     ```js
-    // webpack.config.js
+    // webpack.config.cjs
+    const { preact } = require('./build/webpack.preact.cjs');
+
+    // ...other code
+
     let config = combine(
     	base(pageTitle),
     	// react(),
@@ -202,8 +213,8 @@ Although it is possible to use it via CDN, due to its small size its often benef
     ```html
     <!-- public/index.html -->
     <!--
-    <script crossorigin src="https://unpkg.com/react@16.13/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@16.13/umd/react-dom.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
     -->
     ```
 
@@ -293,11 +304,9 @@ Emotion is very similar to Styled Components, with different trade offs, like it
 -   Install emotion:
 
     ```bash
-    yarn add @emotion/core
-    yarn add -D @emotion/babel-preset-css-prop babel-plugin-emotion
+    yarn add @emotion/react
+    yarn add -D @emotion/babel-plugin
     ```
-
-    _**Note:** The documentation is confusing on supporting the css prop, it requires `@emotion/babel-preset-css-prop` not just the `babel-plugin-emotion` package, which enables performance/debug benefits. This is probably because the other alternative is the @jsx pragma, but this isnt that clear._
 
 -   (Optional) Install styled
 
@@ -307,20 +316,47 @@ Emotion is very similar to Styled Components, with different trade offs, like it
 
 -   Add emotion to `.babelrc`
 
-        ```json
-        {
-            "presets": [
-                //other plugins
-                "@emotion/babel-preset-css-prop"
-            ],
-            "plugins": [
-                "emotion" // Must be first
-                // other plugins
-            ]
-        }
-        ```
+    ```json
+    {
+    	"presets": [
+    		//other presets
+    		[
+    			"@babel/preset-react",
+    			{
+    				"runtime": "automatic"
+    			}
+    		],
+    		"@emotion/babel-preset-css-prop"
+    	],
+    	"plugins": [
+    		"emotion"
+    		// other plugins
+    	]
+    }
+    ```
 
-    </details>
+    _**NB**: Here we not only add the emotion plugin to babel, but we update the `@babel/preset-react` to tell it to handle emotions `jsx()` function rather than react (or preact) version of `jsx()` to support the `css` prop in components._
+
+-   Tell Typescript about the change of jsx function:
+
+    ```json
+    {
+    	"compilerOptions": {
+    		// ...
+    		"jsx": "react-jsx",
+    		"jsxImportSource": "@emotion/react"
+    		// ...
+    	}
+    }
+    ```
+
+References for emotion:
+
+-   https://emotion.sh/docs/css-prop##babel-preset
+-   https://emotion.sh/docs/typescript
+-   https://www.typescriptlang.org/tsconfig#jsxImportSource
+
+</details>
 
 <details>
 <summary>Add CSS and CSS Modules</summary>
