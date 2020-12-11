@@ -11,7 +11,9 @@ const { DefinePlugin } = webpack;
  * @returns {import('webpack').Configuration}
  */
 const base = () => ({
-	entry: './src/index.tsx',
+	entry: {
+		app: './src/index.tsx',
+	},
 	module: {
 		rules: [
 			// JS/TS Files
