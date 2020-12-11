@@ -323,7 +323,8 @@ Emotion is very similar to Styled Components, with different trade offs, like it
     		[
     			"@babel/preset-react",
     			{
-    				"runtime": "automatic"
+    				"runtime": "automatic",
+    				"importSource": "@emotion/react"
     			}
     		],
     		"@emotion/babel-preset-css-prop"
