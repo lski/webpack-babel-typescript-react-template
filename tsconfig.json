@@ -9,15 +9,10 @@
 		"module": "ES2020",
 		"moduleResolution": "node",
 		"resolveJsonModule": true,
-		"jsx": "react",
+		"jsx": "preserve",
 		"sourceMap": true,
 		"baseUrl": "./",
-		"typeRoots": [
-			"./src/types",
-			"./node_modules/@types/"
-		],
+		"typeRoots": ["./src/types", "./node_modules/@types/"]
 	},
-	"include": [
-		"src"
-	]
+	"include": ["src"]
 }
