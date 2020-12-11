@@ -7,7 +7,7 @@
  */
 const umd = (outputDir) => ({
 	output: {
-		filename: '[name].[hash:6].js',
+		filename: '[name].[contenthash].js',
 		path: outputDir,
 		pathinfo: true,
 		publicPath: '/',
