@@ -57,8 +57,6 @@ const resolveOptions = (env) => {
 	const buildAnalysis = env.analysis === true || process.env.WPT_BUILD_ANALYSIS === 'true' || false;
 	const isVerbose = env.verbose === true || process.env.WPT_BUILD_VERBOSE === 'true' || false;
 
-	console.log(env, buildAnalysis);
-
 	return {
 		outputDir,
 		serverHost,
