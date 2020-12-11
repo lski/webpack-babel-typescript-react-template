@@ -7,7 +7,12 @@ module.exports = {
 			},
 		],
 		'@babel/preset-typescript',
-		'@babel/react',
+		[
+			'@babel/preset-react',
+			{
+				runtime: 'automatic',
+			},
+		],
 	],
 	plugins: ['@babel/proposal-class-properties', '@babel/proposal-object-rest-spread'],
 };
