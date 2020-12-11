@@ -1,12 +1,12 @@
-const { base } = require('./.webpack/webpack.base.cjs');
-const { umd } = require('./.webpack/webpack.output.cjs');
-const { react } = require('./.webpack/webpack.react.cjs');
-const { development } = require('./.webpack/webpack.development.cjs');
-const { devServer } = require('./.webpack/webpack.devserver.cjs');
-const { production } = require('./.webpack/webpack.production.cjs');
-const { analysis: report } = require('./.webpack/webpack.analysis.cjs');
+const { base } = require('./build/webpack.base.cjs');
+const { umd } = require('./build/webpack.output.cjs');
+const { react } = require('./build/webpack.react.cjs');
+const { development } = require('./build/webpack.development.cjs');
+const { devServer } = require('./build/webpack.devserver.cjs');
+const { production } = require('./build/webpack.production.cjs');
+const { analysis: report } = require('./build/webpack.analysis.cjs');
 
-const { combine } = require('./.webpack/combine.cjs');
+const { combine } = require('./build/combine.cjs');
 const path = require('path');
 const dotenv = require('dotenv');
 dotenv.config();
@@ -50,7 +50,7 @@ module.exports = function (env = {}, argv = {}) {
  */
 const resolveSettings = (env) => {
 	// Attenpt to ensure the options are not going to throw an null error
-	const outputDir = path.resolve(env.outputDir || process.env.WPT_OUTPUT_DIR || './build');
+	const outputDir = path.resolve(env.outputDir || process.env.WPT_OUTPUT_DIR || './dist');
 	const serverHost = (env.server && env.server.host) || process.env.WPT_SERVER_HOST || '0.0.0.0';
 	const serverPort = parseInt((env.server && env.server.port) || process.env.WPT_SERVER_PORT, 10) || 3030;
 	const analysis = env.analysis === true || process.env.WPT_BUILD_ANALYSIS === 'true' || false;
