@@ -57,10 +57,9 @@ const base = () => ({
 				test: /\.svg$/i,
 				use: [
 					{
-						loader: 'url-loader',
+						loader: 'svg-url-loader',
 						options: {
-							limit: 2048, // Convert images < 4kb to base64 strings
-							encoding: false,
+							limit: 2048, // Convert images to datauri's < 2kb
 							name: 'assets/images/[hash]-[name].[ext]',
 						},
 					},
