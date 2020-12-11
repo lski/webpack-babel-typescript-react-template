@@ -351,7 +351,7 @@ You can then use `.css` and `.module.css` files to your projects and they will b
     			// Handles css style modules, requires an extension of ***.module.scss
     			{
     				exclude: [/node_modules/],
-    				test: /\module.css$/,
+    				test: /\.module.css$/,
     				use: [
     					'style-loader',
     					'@teamsupercell/typings-for-css-modules-loader',
@@ -429,7 +429,7 @@ You can then use `.scss` and `.module.scss` files to your projects and they will
     			// Handles sass modules, requires an extension of ***.module.scss
     			{
     				exclude: [/node_modules/],
-    				test: /\module.scss$/,
+    				test: /\.module.scss$/,
     				use: [
     					'style-loader',
     					'@teamsupercell/typings-for-css-modules-loader',
