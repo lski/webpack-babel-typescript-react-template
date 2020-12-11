@@ -34,7 +34,7 @@ module.exports = {
 	],
 	overrides: [
 		{
-			files: ['*.ts', '*.tsx'],
+			files: ['**/*.ts', '**/*.tsx'],
 			extends: [
 				'eslint:recommended',
 				'plugin:react/recommended', // Uses the recommended rules from @eslint-plugin-react
@@ -51,7 +51,7 @@ module.exports = {
 			},
 		},
 		{
-			files: ['*.js', '*.jsx'],
+			files: ['**/*.js', '**/*.jsx'],
 			extends: [
 				'eslint:recommended',
 				'plugin:react/recommended', // Uses the recommended rules from @eslint-plugin-react
