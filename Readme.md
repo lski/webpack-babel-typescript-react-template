@@ -92,6 +92,18 @@ _**Note:** Command line supersedes Environment Variables._
 
 _**Tip:** Use an .env in local development mode._
 
+## Environment Variables
+
+Similar to Create React App, this template supports using a `.env' located in the root, however where it differs from CRA is that only a single `.env` is supported, it is also excluded from source control as its main benefit is in using it for development and should not override ENV vars set in production.
+
+As well as supporting a `.env` file and being able to change [settings](./#Settings) using Environment Variables, it is also possible to reference them directly in your code! As pointed out by Create React App, exposing all the environment variables for a system would be a security risk, so only NODE*ENV plus any env vars that start `WPT_APP*` will be available in the app.
+
+E.g. An environment variable: `WPT_APP_ADMIN_EMAIL=joe.bloggs@email.com` could be referenced directly in code with `process.env.WPT_APP_ADMIN_EMAIL`.
+
+## Types
+
+Types for Typescript are loaded from 2 folders: `/node_modules/@types` and `/src/types` to add more declaration files add them to the types folder and Typescript should reference them directly.
+
 ## Docker
 
 This application supports both developing your application in a Docker container and also running a production version.
@@ -533,3 +545,5 @@ It would be ideal if:
 -   Add setting for dataurl size
 -   Add a baseUrl setting (in a similar way to the way PUBLIC_URL works for CRA)
 -   Consider the ExtractTextPlugin for CSS/SASS imports (Note: The benefits arent as good as first seems.)
+-   Look at setting for having the `fork-ts-checker-webpack-plugin` fail if using with webpack dev server.
+-       Add the option for using hot reload in webpack dev server
