@@ -59,7 +59,7 @@ To run the application the scripts are similar to those of Create React App.
 -   `yarn run lint:fix` Applies auto fixes, where possible, to errors/warnings found by `yarn run lint`.
 -   `yarn run analysis`
 
-    Uses `webpack-bundle-analyzer` to create a report on both the development & production builds. To view the reports naigate to `/report` and open the html files.
+    Uses `webpack-bundle-analyzer` to create a report on both the development & production builds. To view the reports navigate to `/report` and open the html files.
 
 ## Settings
 
@@ -175,10 +175,10 @@ Below is a guide to add preact as a drop in for react.
 
     _**Note:** We dont remove the `react-dom` package, because we have used aliases it wont be picked up by webpack, it tricks typescript into thinking it exists._
 
--   Add a build configuration for preact to tell it to pretend to be react:
+-   Append a build configuration for preact to tell it to pretend to be react:
 
     ```js
-    // build/webpack.preact.cjs
+    // webpack.config.cjs
     const preact = () => ({
     	resolve: {
     		alias: {
@@ -188,18 +188,12 @@ Below is a guide to add preact as a drop in for react.
     		},
     	},
     });
-
-    module.exports = { preact };
     ```
 
--   Switch the react configuration in webpack to the preact configuration in the main webpack configuration file:
+-   In the top level `build` function switch react config for preact
 
     ```js
     // webpack.config.cjs
-    const { preact } = require('./build/webpack.preact.cjs');
-
-    // ...other code
-
     let config = combine(
     	base(pageTitle),
     	// react(),
@@ -378,6 +372,7 @@ You can then use `.css` and `.module.css` files to your projects and they will b
 
 -   Add following `css` config to bottom of `webpack.config.js`:
     ```js
+    // webpack.config.js
     const css = () => ({
     	plugins: [
     		// WatchIgnorePlugin currently only used only to prevent '--watch' being slow when using   Sass/CSS Modules, remove if not needed
@@ -424,8 +419,9 @@ You can then use `.css` and `.module.css` files to your projects and they will b
     	},
     });
     ```
--   Add that config to the webpack.config.js pipeline:
+-   Add that config to the top level build function pipeline:
     ```js
+    // webpack.config.js
     let config = combine(
     	base(pageTitle),
     	// other configurations
@@ -456,6 +452,7 @@ You can then use `.scss` and `.module.scss` files to your projects and they will
 
 -   Add following `sass` config to bottom of `webpack.config.js`:
     ```js
+    // webpack.config.js
     const sass = () => ({
     	plugins: [
     		// WatchIgnorePlugin currently only used only to prevent '--watch' being slow when using   Sass/CSS Modules, remove if not needed
@@ -504,8 +501,9 @@ You can then use `.scss` and `.module.scss` files to your projects and they will
     	},
     });
     ```
--   Add that config to the webpack.config.js pipeline:
+-   Add that config to the top level build function pipeline:
     ```js
+    // webpack.config.js
     let config = combine(
     	base(pageTitle),
     	// other configurations
@@ -522,7 +520,7 @@ _**Note:** Generally we would exclude auto generated files from git in the `.git
 It would be ideal if:
 
 -   I will add a module/nomodule split for output as soon as it lands in webpack 5+
--   Add Dockerfile for docker development
+-   Attempt to combine Dockerfile.dev into Dockerfile
 -   This project either prepared for testing or added generic testing in ready for the developer, but need to decide on Cypress or Jest.
 -   Add manifest files to public for PWA support
 -   Add favicon to public
