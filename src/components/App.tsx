@@ -14,13 +14,12 @@ const style: CSSProperties = {
 };
 
 export function App(): JSX.Element {
-	const [msg, setMsg] = useState<string>('Hello World');
+	const [text, setText] = useState<string>('Click Me!');
 
 	return (
 		<div style={style}>
 			<img src={logo} alt="It's a logo"></img>
-			<p>{msg}</p>
-			<button onClick={() => setMsg("It's a whole new world as I have been clicked!")}>Click Me!</button>
+			<button onClick={() => setText("I've been clicked!")}>{text}</button>
 		</div>
 	);
 }
