@@ -53,6 +53,7 @@ _**Note:** This project intentionally offers minimal features its build, but wit
 To run the application the scripts are similar to those of Create React App.
 
 -   `yarn run start` Starts a development build using `webpack-dev-server`
+-   `yarn run test` Runs tests
 -   `yarn run build` Creates a minified production ready build
 -   `yarn run build:dev` Similar to `build` but creates an unoptimised development ready build.
 -   `yarn run lint` Runs eslint on the code, highlighting any errors/warnings.
@@ -256,6 +257,84 @@ Just install the packages to use React Router
         ```
 
     </details>
+
+<details>
+<summary>Add Jest and React Testing Library</summary>
+
+This follows the [guide](https://jestjs.io/docs/en/webpack.html) on the jest website for adding it to a webpack project, as it need to handle assets that are not just typescript or javascript files. See the docs on [React testing library] to see how to use it and for a a list of additional jest matchers see the [testing-library/jest-dom](https://github.com/testing-library/jest-dom) project.
+
+The jest library by default runs any files that are either in a `__tests__` folder or the filename finishes with `.test.ts`.
+
+**\*NB:** See the `jest` branch for a working version with jest.\*
+
+-   Install packages
+
+    ```bash
+    yarn add -D jest babel-jest @types/jest @testing-library/jest-dom @testing-library/react identity-obj-proxy
+    ```
+
+-   Create setup file for jest `/jest.setup.ts`
+
+    ```js
+    // Adds matchers to jest e.g. toBeInDocument()
+    import '@testing-library/jest-dom';
+    ```
+
+-   Create a mock file for raw file importing e.g. images `/__mocks__/fileMock.ts`
+
+    ```
+    export default '';
+    ```
+
+-   Add configuration for jest to `/package.json`:
+
+    ```json
+    {
+    	// ...other settings
+    	"jest": {
+    		"moduleNameMapper": {
+    			"\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.ts",
+    			"\\.(css|less|scss)$": "identity-obj-proxy"
+    		},
+    		"setupFilesAfterEnv": ["<rootDir>/jest.setup.ts"]
+    	}
+    }
+    ```
+
+    We are doing 3 things her:
+
+    -   First we tell jest when it hits a raw file, like an image file, to instead use `fileMock.ts`, which just returns an empty string as normally webpack would be returning a string that can be used in a 'src' parameter and this allows jest to not worry about parsing it.
+    -   Second, we use the package `identity-obj-proxy` for any css (sass or less) files. As css/sass/less modules normally return objects with class names, identity-obj-proxy allows us to fake those objects. `identity-obj-proxy` is not strictly needed for this, but its super lightweight and only included in tests.
+    -   Third are are creating a 'setup' file that jest will run after the environment is setup, so that we can add the matchers from testing-library/jest-dom to jests expect function.
+
+-   Update the `test` script in `/package.json`. Swap `"test": "echo \"Error: no test specified\" && exit 1"` with `"test": "jest"`
+
+-   (Optional) Create a test file to test App is loading correctly:
+
+    ```js
+    import React from 'react';
+    import App from './App';
+    import { render, screen, cleanup, fireEvent } from '@testing-library/react';
+
+    afterEach(cleanup);
+
+    test('App loads with correct text on button', () => {
+    	render(<App />);
+    	const element = screen.getByText(/click me/i);
+    	expect(element).toBeInTheDocument();
+    });
+
+    test('Clicking button changes text', () => {
+    	render(<App />);
+    	const element = screen.getByText(/click me/i);
+
+    	fireEvent.click(element);
+
+    	expect(element.textContent).toMatch(/clicked/i);
+    });
+    ```
+
+</details>
 
 <details>
 <summary>Add StyledComponents</summary>
@@ -546,4 +625,4 @@ It would be ideal if:
 -   Add a baseUrl setting (in a similar way to the way PUBLIC_URL works for CRA)
 -   Consider the ExtractTextPlugin for CSS/SASS imports (Note: The benefits arent as good as first seems.)
 -   Look at setting for having the `fork-ts-checker-webpack-plugin` fail if using with webpack dev server.
--       Add the option for using hot reload in webpack dev server
+-           Add the option for using hot reload in webpack dev server
