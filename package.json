@@ -11,7 +11,7 @@
 		"lint": "yarn run eslint ./",
 		"lint:fix": "yarn run lint --fix",
 		"start": "yarn run webpack serve",
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"test": "jest"
 	},
 	"contributors": [],
 	"keywords": [],
@@ -21,6 +21,15 @@
 		"react": "^17.0.1",
 		"react-dom": "^17.0.1"
 	},
+	"jest": {
+		"moduleNameMapper": {
+			"\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.ts",
+			"\\.(css|less|scss)$": "identity-obj-proxy"
+		},
+		"setupFilesAfterEnv": [
+			"<rootDir>/jest.setup.ts"
+		]
+	},
 	"devDependencies": {
 		"@babel/core": "^7.12.10",
 		"@babel/plugin-proposal-class-properties": "^7.10.1",
@@ -28,9 +37,13 @@
 		"@babel/preset-env": "^7.12.11",
 		"@babel/preset-react": "^7.12.10",
 		"@babel/preset-typescript": "^7.10.1",
+		"@testing-library/jest-dom": "^5.11.6",
+		"@testing-library/react": "^11.2.2",
+		"@types/jest": "^26.0.19",
 		"@types/react-dom": "^17.0.0",
 		"@typescript-eslint/eslint-plugin": "^4.11.0",
 		"@typescript-eslint/parser": "^4.11.0",
+		"babel-jest": "^26.6.3",
 		"babel-loader": "^8.1.0",
 		"clean-webpack-plugin": "^3.0.0",
 		"copy-webpack-plugin": "^7.0.0",
@@ -44,6 +57,8 @@
 		"fork-ts-checker-webpack-plugin": "^6.0.8",
 		"html-webpack-plugin": "^4.3.0",
 		"husky": "^4.3.6",
+		"identity-obj-proxy": "^3.0.0",
+		"jest": "^26.6.3",
 		"prettier": "^2.0.5",
 		"pretty-quick": "^3.1.0",
 		"svg-url-loader": "^7.1.1",
