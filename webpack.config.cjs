@@ -20,24 +20,24 @@ dotenv.config();
  */
 module.exports = function build(env = {}, argv = {}) {
 	// Settings
-	const { outputDir, serverHost, serverPort, buildAnalysis, isVerbose } = resolveOptions(env);
+	const { outputDir, buildAnalysis, isVerbose, isDevServer, devServerHost, devServerPort } = resolveOptions(env);
 
 	// Mode
 	const mode = argv.mode || 'development';
 	const isDev = mode !== 'production';
-	const isDevServer = !!process.env.WEBPACK_DEV_SERVER;
 
 	let config = combine(
 		base(),
 		umd(outputDir),
 		react(),
 		isDev ? development() : production(),
-		isDevServer && devServer(outputDir, serverHost, serverPort),
+		isDevServer && devServer(outputDir, devServerHost, devServerPort),
 		buildAnalysis && analysis(mode)
 		// add other configurations here
 	);
 
 	if (isVerbose) {
+		console.log('Compiled configuration:');
 		console.log(JSON.stringify(config, null, 2));
 	}
 
@@ -234,28 +234,38 @@ const analysis = (environment, open = false, mode = 'static') => ({
 });
 
 /**
- * Accepts an env object from the command line and tries to resolve the options
+ * Accepts an argument env object from the command line and tries to resolve the options
  *
- * @param {{ server?: { host?: string; port?: number; }; outputDir?: string, analysis: boolean, verbose: boolean }} env
+ * @param {{ server?: { host?: string; port?: number; }; outputDir?: string, analysis: boolean, verbose: boolean, WEBPACK_SERVE?: boolean }} args
  *
- * @returns {{ serverHost: string; serverPort: number; outputDir: string, buildAnalysis: boolean, isVerbose: boolean }}
+ * @returns {{ devServerHost: string; devServerPort: number; outputDir: string, buildAnalysis: boolean, isVerbose: boolean, isDevServer: boolean }}
  */
-const resolveOptions = (env) => {
-	// Attenpt to ensure the options are not going to throw an null error
-	const outputDir = path.resolve(env.outputDir || process.env.WPT_OUTPUT_DIR || './build');
-	const serverHost = (env.server && env.server.host) || process.env.WPT_SERVER_HOST || '0.0.0.0';
-	const serverPort = parseInt((env.server && env.server.port) || process.env.WPT_SERVER_PORT, 10) || 3030;
-	const buildAnalysis = env.analysis === true || process.env.WPT_BUILD_ANALYSIS === 'true' || false;
-	const isVerbose = env.verbose === true || process.env.WPT_BUILD_VERBOSE === 'true' || false;
+const resolveOptions = (args) => {
+	const env = process.env;
 
-	return {
+	// Attenpt to ensure the options are not going to throw an null error
+	const outputDir = path.resolve(args.outputDir || env.WPT_OUTPUT_DIR || './build');
+	const devServerHost = (args.server && args.server.host) || env.WPT_SERVER_HOST || '0.0.0.0';
+	const devServerPort = parseInt((args.server && args.server.port) || env.WPT_SERVER_PORT, 10) || 3030;
+	const buildAnalysis = isTrue(args.analysis) || isTrue(env.WPT_BUILD_ANALYSIS) || false;
+	const isVerbose = isTrue(args.verbose) || isTrue(env.WPT_BUILD_VERBOSE) || false;
+	const isDevServer = isTrue(args.WEBPACK_SERVE);
+
+	const options = {
 		outputDir,
-		serverHost,
-		serverPort,
 		buildAnalysis,
 		isVerbose,
+		isDevServer,
+		devServerHost,
+		devServerPort,
 	};
+
+	console.log('Options:', options);
+
+	return options;
 };
+
+const isTrue = (val) => val === true || val === 'true' || val === 1;
 
 /**
  * Creates a new env object only containing those beginning with WPT_APP_

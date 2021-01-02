@@ -20,4 +20,4 @@ COPY . /app/
 EXPOSE 80
 
 # Run webpack dev server
-CMD yarn run start --env port=80
+CMD yarn run start --env server.port=80
