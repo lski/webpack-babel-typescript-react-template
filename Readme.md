@@ -201,6 +201,8 @@ Below is a guide to add preact as a drop in for react.
     		},
     	},
     });
+
+    module.exports = { preact };
     ```
 
 -   In the top level `build` function switch react config for preact
@@ -427,8 +429,7 @@ Emotion is very similar to Styled Components, with different trade offs, like it
     				"runtime": "automatic",
     				"importSource": "@emotion/react"
     			}
-    		],
-    		"@emotion/babel-preset-css-prop"
+    		]
     	],
     	"plugins": [
     		"emotion"
@@ -478,6 +479,7 @@ You can then use `.css` and `.module.css` files to your projects and they will b
     ```
 
 -   Create a new build file for css `./webpack/webpack.css.js`:
+
     ```js
     // ./webpack/webpack.css.js
     const css = () => ({
@@ -525,7 +527,10 @@ You can then use `.css` and `.module.css` files to your projects and they will b
     		],
     	},
     });
+
+    module.exports = { css };
     ```
+
 -   Add that config to the top level build function pipeline:
 
     ```js
@@ -563,6 +568,7 @@ You can then use `.scss` and `.module.scss` files to your projects and they will
     ```
 
 -   Create a new build file for sass `./webpack/webpack.sass.js`:
+
     ```js
     // ./webpack/webpack.sass.js
     const sass = () => ({
@@ -612,7 +618,10 @@ You can then use `.scss` and `.module.scss` files to your projects and they will
     		],
     	},
     });
+
+    module.exports = { sass };
     ```
+
 -   Add that config to the top level build function pipeline:
 
     ```js
@@ -651,4 +660,6 @@ It would be ideal if:
 -   Add a baseUrl setting (in a similar way to the way PUBLIC_URL works for CRA)
 -   Consider the ExtractTextPlugin for CSS/SASS imports (Note: The benefits arent as good as first seems.)
 -   Look at setting for having the `fork-ts-checker-webpack-plugin` fail if using with webpack dev server.
--               Add the option for using hot reload in webpack dev server
+    -   Add the option for using hot reload in webpack dev server
+-   Consider switch the typings fro css/sass modules to a ts plugin instead `typescript-plugin-css-modules`
+    -   See https://spin.atomicobject.com/2020/06/22/css-module-typescript/ for example
