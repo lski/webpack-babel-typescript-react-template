@@ -24,32 +24,39 @@ module.exports = function build(env = {}, argv = {}) {
 
 	// Mode
 	const mode = argv.mode || 'development';
-	const isDev = mode !== 'production';
+	const isDev = mode === 'development';
 
 	let config = combine(
-		base(),
-		umd(outputDir),
+		cleanBuild(),
+		base(isVerbose),
+		outputUmd(outputDir),
+		fonts(),
+		images(),
+		html(),
+		rawFiles(),
 		react(),
+		envVars(),
 		isDev ? development() : production(),
-		isDevServer && devServer(outputDir, devServerHost, devServerPort),
+		isDevServer && devServer(outputDir, devServerHost, devServerPort, isVerbose),
 		buildAnalysis && analysis(mode)
 		// add other configurations here
 	);
 
 	if (isVerbose) {
-		console.log('Compiled configuration:');
-		console.log(JSON.stringify(config, null, 2));
+		console.log('Compiled configuration:\n', JSON.stringify(config, null, 2));
 	}
 
 	return config;
 };
 
 /**
- * Creates the basics of the build, without 'output' so that it can be used with different output builds
+ * Creates the basic config for the build and allows development of an application using typescript, with type checking.
+ * Is complete enough that it only requires the webpack 'mode' to be set and there is an output property added to the
+ * config to be useable.
  *
  * @returns {import('webpack').Configuration}
  */
-const base = () => ({
+const base = (isVerbose = false) => ({
 	entry: {
 		app: './src/index.tsx',
 	},
@@ -60,23 +67,101 @@ const base = () => ({
 				exclude: [/node_modules/],
 				test: /(\.[jt]sx?)$/,
 				use: {
+					// babel config is set in `babel.config.js`
 					loader: 'babel-loader',
 				},
 			},
-			// Fonts
-			{
-				exclude: [/node_modules/],
-				test: /\.(woff(2)?|ttf|eot)(\?v=\d+\.\d+\.\d+)?$/,
-				use: [
-					{
-						loader: 'file-loader',
-						options: {
-							name: '[name].[ext]',
-							outputPath: 'assets/font/[hash]-[name].[ext]',
-						},
-					},
-				],
+		],
+	},
+	resolve: {
+		extensions: ['.ts', '.tsx', '.js', '.jsx'],
+		mainFields: ['module', 'browser', 'main'],
+	},
+	plugins: [
+		// Handles type script type checking. By default in 'watch' runs async, otherwise sync
+		// Async means it will run at the same time as build, but not stop it on failure,
+		// sync will prevent the build (good for creating production builds safetly).
+		new ForkTsCheckerWebpackPlugin({
+			eslint: {
+				files: './src/**/*.{ts,tsx,js,jsx}',
 			},
+		}),
+	],
+	stats: isVerbose ? 'verbose' : 'minimal',
+});
+
+/**
+ * Creates an output build in UMD format
+ *
+ * @param {string} outputDir
+ *
+ * @returns {import('webpack').Configuration}
+ */
+const outputUmd = (outputDir) => ({
+	output: {
+		filename: '[name].[contenthash].js',
+		path: outputDir,
+		pathinfo: true,
+		publicPath: '/',
+	},
+});
+
+/**
+ * Deletes the output files of the previous build to prevent contaimination of build output
+ *
+ * @returns {import('webpack').Configuration}
+ */
+const cleanBuild = () => ({
+	plugins: [new CleanWebpackPlugin()],
+});
+
+/**
+ * Creates a HTML file based ona  template
+ *
+ * @returns {import('webpack').Configuration}
+ */
+const html = () => ({
+	plugins: [
+		new HtmlWebpackPlugin({
+			template: './public/index.html',
+			hash: true,
+		}),
+	],
+});
+
+/**
+ * Copies files 'as-is' from the `public` folder to the root of the build folder without any processing by webpack.
+ * Very useful for files you want to be accessible in the root e.g. favicon.ico file or files required for GitHub pages etc.
+ *
+ * *Note:* Although unlikely, it is possible to overwrite generated files in output, so use caution in naming files.
+ *
+ * @param {string[]} ignoreFiles list of glob patterns to exclude from the copy. By default ignores the html template.
+ * @returns {import('webpack').Configuration}
+ */
+const rawFiles = (ignoreFiles = ['index.html']) => ({
+	plugins: [
+		// Copy all files (not the template) to the build folder
+		new CopyPlugin({
+			patterns: [
+				{
+					from: 'public',
+					globOptions: {
+						ignore: ignoreFiles,
+					},
+				},
+			],
+		}),
+	],
+});
+
+/**
+ * Adds the ability to import images.
+ *
+ * @returns {import('webpack').Configuration}
+ */
+const images = () => ({
+	module: {
+		rules: [
 			// Handles images
 			{
 				exclude: [/node_modules/],
@@ -106,52 +191,31 @@ const base = () => ({
 			},
 		],
 	},
-	resolve: {
-		extensions: ['.ts', '.tsx', '.js', '.jsx'],
-		mainFields: ['module', 'browser', 'main'],
-	},
-	plugins: [
-		new ForkTsCheckerWebpackPlugin({
-			eslint: {
-				files: './src/**/*.{ts,tsx,js,jsx}',
-			},
-		}),
-		new HtmlWebpackPlugin({
-			template: './public/index.html',
-			hash: true,
-		}),
-		new CleanWebpackPlugin(),
-		// Copy all files (not the template) to the build folder
-		new CopyPlugin({
-			patterns: [
-				{
-					from: 'public',
-					globOptions: {
-						ignore: ['index.html'],
-					},
-				},
-			],
-		}),
-		// Clean up the env variables available to this app in a similar way to CRA
-		new DefinePlugin({
-			'process.env': sanitizeEnvironmentVariables(process.env),
-		}),
-	],
 });
 
 /**
- * Creates an output build in UMD format
- *
- * @param {string} outputDir
+ * Adds the ability to import fonts
  *
  * @returns {import('webpack').Configuration}
  */
-const umd = (outputDir) => ({
-	output: {
-		filename: '[name].[contenthash].js',
-		path: outputDir,
-		pathinfo: true,
-		publicPath: '/',
+const fonts = () => ({
+	module: {
+		rules: [
+			// Fonts
+			{
+				exclude: [/node_modules/],
+				test: /\.(woff(2)?|ttf|eot)(\?v=\d+\.\d+\.\d+)?$/,
+				use: [
+					{
+						loader: 'file-loader',
+						options: {
+							name: '[name].[ext]',
+							outputPath: 'assets/font/[hash]-[name].[ext]',
+						},
+					},
+				],
+			},
+		],
 	},
 });
 
@@ -176,7 +240,7 @@ const development = () => {
  *
  * @returns {import('webpack').Configuration}
  */
-const devServer = (path, host = '0.0.0.0', port = 3030) => ({
+const devServer = (path, host = '0.0.0.0', port = 3030, isVerbose = false) => ({
 	devtool: 'eval-cheap-source-map',
 	devServer: {
 		contentBase: path,
@@ -184,6 +248,7 @@ const devServer = (path, host = '0.0.0.0', port = 3030) => ({
 		port: port,
 		historyApiFallback: true,
 		host: host,
+		stats: isVerbose ? 'verbose' : 'minimal',
 	},
 });
 
@@ -234,6 +299,22 @@ const analysis = (environment, open = false, mode = 'static') => ({
 });
 
 /**
+ * Sets up the WPT_APP_ environment variables so they can be used in the application.
+ * Only `NODE_ENV` and env vars starting with `WPT_APP_` are available to ensure no sensitive
+ * information is leaked from your system.
+ *
+ * @returns {import('webpack').Configuration}
+ */
+const envVars = () => ({
+	plugins: [
+		// Clean up the env variables available to this app in a similar way to CRA
+		new DefinePlugin({
+			'process.env': sanitizeEnvironmentVariables(process.env),
+		}),
+	],
+});
+
+/**
  * Accepts an argument env object from the command line and tries to resolve the options
  *
  * @param {{ server?: { host?: string; port?: number; }; outputDir?: string, analysis: boolean, verbose: boolean, WEBPACK_SERVE?: boolean }} args
@@ -260,7 +341,9 @@ const resolveOptions = (args) => {
 		devServerPort,
 	};
 
-	console.log('Options:', options);
+	if (isVerbose) {
+		console.log('Resolved Options:\n', options);
+	}
 
 	return options;
 };
