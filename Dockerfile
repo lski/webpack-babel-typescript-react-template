@@ -18,7 +18,10 @@ RUN yarn install --frozen-lockfile
 # Get all the code needed to run the ap
 COPY . /app/
 
-#Build the app
+# Run test and abort on error
+RUN yarn run test
+
+# Build the app
 RUN yarn run build
 
 #==================== Setting up stage ====================#
