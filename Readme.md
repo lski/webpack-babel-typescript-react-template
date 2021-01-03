@@ -284,7 +284,7 @@ The jest library by default runs any files that are either in a `__tests__` fold
     import '@testing-library/jest-dom';
     ```
 
--   Create a mock file for raw file importing e.g. images `/__mocks__/fileMock.ts`
+-   Create a mock file for raw file importing e.g. images `/mocks/fileMock.ts`
 
     ```
     export default '';
@@ -297,7 +297,7 @@ The jest library by default runs any files that are either in a `__tests__` fold
     	// ...other settings
     	"jest": {
     		"moduleNameMapper": {
-    			"\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.ts",
+    			"\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/mocks/fileMock.ts",
     			"\\.(css|less|scss)$": "identity-obj-proxy"
     		},
     		"setupFilesAfterEnv": ["<rootDir>/jest.setup.ts"]
@@ -315,10 +315,14 @@ The jest library by default runs any files that are either in a `__tests__` fold
 
 -   Update `Dockerfile` to run tests on build prior to production:
 
-    ```dockerfile
-    # Other command
-    yarn run test
-    yarn run build
+    ```Dockerfile
+    # ...Other commands
+
+    # Run test and abort on error
+    RUN yarn run test
+
+    # Build the app
+    RUN yarn run build
     ```
 
 -   (Optional) Create a test file to test App is loading correctly:
@@ -647,4 +651,4 @@ It would be ideal if:
 -   Add a baseUrl setting (in a similar way to the way PUBLIC_URL works for CRA)
 -   Consider the ExtractTextPlugin for CSS/SASS imports (Note: The benefits arent as good as first seems.)
 -   Look at setting for having the `fork-ts-checker-webpack-plugin` fail if using with webpack dev server.
--             Add the option for using hot reload in webpack dev server
+-               Add the option for using hot reload in webpack dev server
