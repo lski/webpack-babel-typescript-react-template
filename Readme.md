@@ -188,10 +188,10 @@ Below is a guide to add preact as a drop in for react.
 
     _**Note:** We dont remove the `react-dom` package, because we have used aliases it wont be picked up by webpack, it tricks typescript into thinking it exists._
 
--   Append a build configuration for preact to tell it to pretend to be react:
+-   Create a new build configuration for preact to tell it to pretend to be react:
 
     ```js
-    // webpack.config.cjs
+    // .webpack/webpack.preact.cjs
     const preact = () => ({
     	resolve: {
     		alias: {
@@ -207,6 +207,10 @@ Below is a guide to add preact as a drop in for react.
 
     ```js
     // webpack.config.cjs
+    const preact = require('./.webpack/webpack.preact.cjs');
+
+    // ...other code
+
     let config = combine(
     	base(pageTitle),
     	// react(),
@@ -301,13 +305,21 @@ The jest library by default runs any files that are either in a `__tests__` fold
     }
     ```
 
-    We are doing 3 things her:
+    We are doing 3 things here:
 
     -   First we tell jest when it hits a raw file, like an image file, to instead use `fileMock.ts`, which just returns an empty string as normally webpack would be returning a string that can be used in a 'src' parameter and this allows jest to not worry about parsing it.
     -   Second, we use the package `identity-obj-proxy` for any css (sass or less) files. As css/sass/less modules normally return objects with class names, identity-obj-proxy allows us to fake those objects. `identity-obj-proxy` is not strictly needed for this, but its super lightweight and only included in tests.
     -   Third are are creating a 'setup' file that jest will run after the environment is setup, so that we can add the matchers from testing-library/jest-dom to jests expect function.
 
 -   Update the `test` script in `/package.json`. Swap `"test": "echo \"Error: no test specified\" && exit 1"` with `"test": "jest"`
+
+-   Update `Dockerfile` to run tests on build prior to production:
+
+    ```dockerfile
+    # Other command
+    yarn run test
+    yarn run build
+    ```
 
 -   (Optional) Create a test file to test App is loading correctly:
 
@@ -367,7 +379,7 @@ _**Note:** `node-sass` is not required for styled-components or emotion._
         ```
 
         ```js
-        // .babelrc
+        // babel.config.js
         {
             // other settings
             "plugins": [
@@ -399,7 +411,7 @@ Emotion is very similar to Styled Components, with different trade offs, like it
     yarn add @emotion/styled
     ```
 
--   Add emotion to `.babelrc`
+-   Add emotion to `babel.config.js`
 
     ```json
     {
@@ -461,9 +473,9 @@ You can then use `.css` and `.module.css` files to your projects and they will b
     yarn add -D css-loader typings-for-css-modules-loader style-loader @teamsupercell/typings-for-css-modules-loader
     ```
 
--   Add following `css` config to bottom of `webpack.config.js`:
+-   Create a new build file for css `./webpack/webpack.css.js`:
     ```js
-    // webpack.config.js
+    // ./webpack/webpack.css.js
     const css = () => ({
     	plugins: [
     		// WatchIgnorePlugin currently only used only to prevent '--watch' being slow when using   Sass/CSS Modules, remove if not needed
@@ -511,8 +523,13 @@ You can then use `.css` and `.module.css` files to your projects and they will b
     });
     ```
 -   Add that config to the top level build function pipeline:
+
     ```js
-    // webpack.config.js
+    // webpack.config.cjs
+    const css = require('./.webpack/webpack.css.cjs');
+
+    // ...other code
+
     let config = combine(
     	base(pageTitle),
     	// other configurations
@@ -541,9 +558,9 @@ You can then use `.scss` and `.module.scss` files to your projects and they will
     yarn add -D css-loader typings-for-css-modules-loader style-loader @teamsupercell/typings-for-css-modules-loader node-sass sass-loader
     ```
 
--   Add following `sass` config to bottom of `webpack.config.js`:
+-   Create a new build file for sass `./webpack/webpack.sass.js`:
     ```js
-    // webpack.config.js
+    // ./webpack/webpack.sass.js
     const sass = () => ({
     	plugins: [
     		// WatchIgnorePlugin currently only used only to prevent '--watch' being slow when using   Sass/CSS Modules, remove if not needed
@@ -593,8 +610,13 @@ You can then use `.scss` and `.module.scss` files to your projects and they will
     });
     ```
 -   Add that config to the top level build function pipeline:
+
     ```js
-    // webpack.config.js
+    // webpack.config.cjs
+    const css = require('./.webpack/webpack.sass.cjs');
+
+    // ...other code
+
     let config = combine(
     	base(pageTitle),
     	// other configurations
@@ -625,4 +647,4 @@ It would be ideal if:
 -   Add a baseUrl setting (in a similar way to the way PUBLIC_URL works for CRA)
 -   Consider the ExtractTextPlugin for CSS/SASS imports (Note: The benefits arent as good as first seems.)
 -   Look at setting for having the `fork-ts-checker-webpack-plugin` fail if using with webpack dev server.
--           Add the option for using hot reload in webpack dev server
+-             Add the option for using hot reload in webpack dev server

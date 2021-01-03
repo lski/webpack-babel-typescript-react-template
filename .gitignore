@@ -1,4 +1,5 @@
 dist
+build
 report
 node_modules
 .env
