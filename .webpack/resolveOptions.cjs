@@ -14,8 +14,8 @@ const resolveOptions = (args) => {
 	const outputDir = path.resolve(args.outputDir || env.WPT_OUTPUT_DIR || './build');
 	const devServerHost = (args.server && args.server.host) || env.WPT_SERVER_HOST || '0.0.0.0';
 	const devServerPort = parseInt((args.server && args.server.port) || env.WPT_SERVER_PORT, 10) || 3030;
-	const buildAnalysis = isTrue(args.analysis) || isTrue(env.WPT_BUILD_ANALYSIS) || false;
-	const isVerbose = isTrue(args.verbose) || isTrue(env.WPT_BUILD_VERBOSE) || false;
+	const buildAnalysis = isTrue(args.analysis, env.WPT_BUILD_ANALYSIS);
+	const isVerbose = isTrue(args.verbose, env.WPT_BUILD_VERBOSE);
 	const isDevServer = isTrue(args.WEBPACK_SERVE);
 
 	const options = {
@@ -34,6 +34,12 @@ const resolveOptions = (args) => {
 	return options;
 };
 
-const isTrue = (val) => val === true || val === 'true' || val === 1;
+/**
+ * If any value passed in is either exactly true, 'true' or 1, then it returns true, otherwise returns false.
+ * Useful for accepting mulitple types for a true value.
+ *
+ * @param {Array<object>} values
+ */
+const isTrue = (...values) => values.some((val) => val === true || val === 'true' || val === 1 || val === '1');
 
 module.exports = { resolveOptions };
