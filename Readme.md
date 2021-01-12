@@ -663,3 +663,4 @@ It would be ideal if:
     -   Add the option for using hot reload in webpack dev server
 -   Consider switch the typings fro css/sass modules to a ts plugin instead `typescript-plugin-css-modules`
     -   See https://spin.atomicobject.com/2020/06/22/css-module-typescript/ for example
+    -   Actually looks like typescript-plugin-css-modules just helps IDEs provide intellisense as TS doesnt allow plugins to do this
