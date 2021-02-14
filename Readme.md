@@ -64,37 +64,27 @@ To run the application the scripts are similar to those of Create React App.
 
 ## Settings
 
-All settings are optional and are set using the command line (via webpacks --env flag) or environment variables **Note:** Command line has priority over Environment Variables:
+All settings are optional and are set using the command line (via webpacks --env flag e.g. `--env buildPath=./build`) or environment variable.
 
--   `--env buildPath=./build` (default: `./build`)
+**Note:** Command line has priority over Environment Variables.
 
-    The output directory for all built assests. Gets cleaned (emptied) prior to new build. Can be relative or absolute.
+|  Setting  |  Default  |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| :-------: | :-------: | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| buildPath | `./build` | The output directory for all built assests. Gets cleaned (emptied) prior to new build. Can be relative or absolute.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| publicUrl |    `/`    | When the app is built it sets a prefix for where the static assets are located so they can be found in the browser. Normally that defaults to the current url base of that 'page' e.g. app.js is referenced `<script src="app.js"></script>` but sometimes the files will be stored in a CDN or that the app itself is running from a sub path of the current domain e.g. `https://my-domain/my-app/`.<br><br>This setting allows a prefix to be set for the assets output the the html file. E.g. `publicUrl=https://a-cdn/` would result in `https://a-cdn/app.js`.<br><br>The public Url can also be used throughout the application, it can be referenced directly in js/ts files via `process.env.PUBLIC_URL` or in the html template via `<%= PUBLIC_URL %>`. Note: The value gets passed on to [webpack publicPath](https://webpack.js.org/configuration/output/#outputpublicpath) and it must end in a forward slash `/` unless an empty value. |
+| analysis  |  `false`  | Creates a bundle report for the current build. See `yarn run analysis`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+|   host    | `0.0.0.0` | The host to run the webpack-dev-server on, only used when using `yarn run start`. The default option exposes it on localhost and externally via machine IP.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+|   port    |  `3030`   | The port to run the webpack-dev-server on, only used when using `yarn run start`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 
--   `--env publicUrl=/` (default: `/`)
+### Environment variables:
 
-    States what the prefix to assets such as js files is in the browser, based on the [webpack publicPath](https://webpack.js.org/configuration/output/#outputpublicpath). E.g. `publicUrl=/stuff` would result in a files like app.js being referenced as `/stuff/app.js`. It is useful for applications located in sub "folders" of the main domain or for assets that will be stored in CDNs e.g. `publicUrl=https://a-cdn/` would result in `https://a-cdn/app.js`. Note: it must end in a forward slash `/`.
-
-    The public Url can also be used throughout the application. It can be referenced directly in js/ts files via `process.env.PUBLIC_URL` or in the html template via `<%= PUBLIC_URL %>`.
-
--   `--env analysis` (default: false)
-
-    Creates a bundle report for the current build. See `yarn run analysis`
-
--   `--env host=0.0.0.0` (default: `0.0.0.0`)
-
-    The host to run the webpack dev server on, has no effect on production. The default option exposes it on localhost and externally via machine IP.
-
--   `--env port=3030` (default: `3030`)
-
-    The port to run webpack dev server, has no effect on production.
-
-### Environment variables equivalents:
-
--   `server.host` -> `HOST`
--   `server.port` -> `PORT`
--   `outputDir` -> `BUILD_PATH`
--   `analysis` -> `BUILD_ANALYSIS=true`
--   `publicUrl` -> `PUBLIC_URL`
+|  Setting  | Environment Variable |
+| :-------: | :------------------: |
+| buildPath |      BUILD_PATH      |
+| publicUrl |      PUBLIC_URL      |
+| analysis  | BUILD_ANALYSIS=true  |
+|   host    |         HOST         |
+|   port    |         PORT         |
 
 A single `.env` file is supported fro development, however unlike CRA there is no support for multiple versions of `.env` as per the recommendation by the dotenv package.
 
@@ -650,6 +640,8 @@ _**Note:** Generally we would exclude auto generated files from git in the `.git
 
 It would be ideal if:
 
+-   Handle proxying api/server calls
+-   Handle auto for public_url setting
 -   I will add a module/nomodule split for output as soon as it lands in webpack 5+
 -   Attempt to combine Dockerfile.dev into Dockerfile
 -   This project either prepared for testing or added generic testing in ready for the developer, but need to decide on Cypress or Jest.
@@ -659,8 +651,6 @@ It would be ideal if:
 -   Consider using TS throughout for building the code. E.g. ts-node
 -   Do more tests on exporting fonts to the outputDir
 -   Investigate source maps relating to the original, rather than webpack output
--   Investigate whether storybook is worthwhile for the template.
-    -   Or is an install guide better?
 -   Add setting for dataurl size
 -   Add a baseUrl setting (in a similar way to the way PUBLIC_URL works for CRA)
 -   Consider the ExtractTextPlugin for CSS/SASS imports (Note: The benefits arent as good as first seems.)
