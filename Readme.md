@@ -66,21 +66,9 @@ To run the application the scripts are similar to those of Create React App.
 
 All settings are optional and are set using the command line (via webpacks --env flag) or environment variables **Note:** Command line has priority over Environment Variables:
 
--   `--env server.host=0.0.0.0` (default: `0.0.0.0`)
-
-    The host to run the webpack dev server on, has no effect on production. The default option exposes it on localhost and externally via machine IP.
-
--   `--env server.port=3030` (default: `3030`)
-
-    The port to run webpack dev server, has no effect on production.
-
--   `--env outputDir=./build` (default: `./build`)
+-   `--env buildPath=./build` (default: `./build`)
 
     The output directory for all built assests. Gets cleaned (emptied) prior to new build. Can be relative or absolute.
-
--   `--env analysis` (default: false)
-
-    Creates a bundle report for the current build. See `yarn run analysis`
 
 -   `--env publicUrl=/` (default: `/`)
 
@@ -88,12 +76,24 @@ All settings are optional and are set using the command line (via webpacks --env
 
     The public Url can also be used throughout the application. It can be referenced directly in js/ts files via `process.env.PUBLIC_URL` or in the html template via `<%= PUBLIC_URL %>`.
 
-Environment variables equivalents:
+-   `--env analysis` (default: false)
 
--   `server.host` -> `WPT_SERVER_HOST`
--   `server.port` -> `WPT_SERVER_PORT`
--   `outputDir` -> `WPT_OUTPUT_DIR`
--   `analysis` -> `WPT_BUILD_ANALYSIS=true`
+    Creates a bundle report for the current build. See `yarn run analysis`
+
+-   `--env host=0.0.0.0` (default: `0.0.0.0`)
+
+    The host to run the webpack dev server on, has no effect on production. The default option exposes it on localhost and externally via machine IP.
+
+-   `--env port=3030` (default: `3030`)
+
+    The port to run webpack dev server, has no effect on production.
+
+### Environment variables equivalents:
+
+-   `server.host` -> `HOST`
+-   `server.port` -> `PORT`
+-   `outputDir` -> `BUILD_PATH`
+-   `analysis` -> `BUILD_ANALYSIS=true`
 -   `publicUrl` -> `PUBLIC_URL`
 
 A single `.env` file is supported fro development, however unlike CRA there is no support for multiple versions of `.env` as per the recommendation by the dotenv package.

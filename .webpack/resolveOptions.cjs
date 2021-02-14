@@ -3,32 +3,32 @@ const path = require('path');
 /**
  * Accepts an argument env object from the command line and tries to resolve the options
  *
- * @param {{ server?: { host?: string; port?: number; }; outputDir?: string, analysis: boolean, verbose: boolean, WEBPACK_SERVE?: boolean }} args
+ * @param {{ host?: string; port?: number; buildPath?: string; analysis: boolean; verbose: boolean; WEBPACK_SERVE?: boolean }} args
  *
- * @returns {{ devServerHost: string; devServerPort: number; outputDir: string, buildAnalysis: boolean, isVerbose: boolean, isDevServer: boolean, publicUrl: string }}
+ * @returns {{ buildPath: string; publicUrl: string; buildAnalysis: boolean; isVerbose: boolean, isDevServer: boolean; host: string; port: number; }}
  */
 const resolveOptions = (args) => {
 	const env = process.env;
 
 	// Attenpt to ensure the options are not going to throw an null error
-	const outputDir = path.resolve(args.outputDir || env.WPT_OUTPUT_DIR || './build');
+	const buildPath = path.resolve(args.buildPath || env.BUILD_PATH || './build');
 	const publicUrl = args.publicUrl || env.PUBLIC_URL || '/';
 
-	const buildAnalysis = isTrue(args.analysis, env.WPT_BUILD_ANALYSIS);
-	const isVerbose = isTrue(args.verbose, env.WPT_BUILD_VERBOSE);
+	const buildAnalysis = isTrue(args.analysis, env.BUILD_ANALYSIS);
+	const isVerbose = isTrue(args.verbose, env.BUILD_VERBOSE);
 
 	const isDevServer = isTrue(args.WEBPACK_SERVE);
-	const devServerHost = (args.server && args.server.host) || env.WPT_SERVER_HOST || '0.0.0.0';
-	const devServerPort = parseInt((args.server && args.server.port) || env.WPT_SERVER_PORT, 10) || 3030;
+	const host = args.host || env.HOST || '0.0.0.0';
+	const port = parseInt(args.port || env.PORT, 10) || 3030;
 
 	const options = {
-		outputDir,
+		buildPath,
 		publicUrl,
 		buildAnalysis,
 		isVerbose,
 		isDevServer,
-		devServerHost,
-		devServerPort,
+		host,
+		port,
 	};
 
 	if (isVerbose) {
