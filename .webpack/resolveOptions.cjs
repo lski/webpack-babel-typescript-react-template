@@ -5,21 +5,25 @@ const path = require('path');
  *
  * @param {{ server?: { host?: string; port?: number; }; outputDir?: string, analysis: boolean, verbose: boolean, WEBPACK_SERVE?: boolean }} args
  *
- * @returns {{ devServerHost: string; devServerPort: number; outputDir: string, buildAnalysis: boolean, isVerbose: boolean, isDevServer: boolean }}
+ * @returns {{ devServerHost: string; devServerPort: number; outputDir: string, buildAnalysis: boolean, isVerbose: boolean, isDevServer: boolean, publicUrl: string }}
  */
 const resolveOptions = (args) => {
 	const env = process.env;
 
 	// Attenpt to ensure the options are not going to throw an null error
 	const outputDir = path.resolve(args.outputDir || env.WPT_OUTPUT_DIR || './build');
-	const devServerHost = (args.server && args.server.host) || env.WPT_SERVER_HOST || '0.0.0.0';
-	const devServerPort = parseInt((args.server && args.server.port) || env.WPT_SERVER_PORT, 10) || 3030;
+	const publicUrl = args.publicUrl || env.PUBLIC_URL || '/';
+
 	const buildAnalysis = isTrue(args.analysis, env.WPT_BUILD_ANALYSIS);
 	const isVerbose = isTrue(args.verbose, env.WPT_BUILD_VERBOSE);
+
 	const isDevServer = isTrue(args.WEBPACK_SERVE);
+	const devServerHost = (args.server && args.server.host) || env.WPT_SERVER_HOST || '0.0.0.0';
+	const devServerPort = parseInt((args.server && args.server.port) || env.WPT_SERVER_PORT, 10) || 3030;
 
 	const options = {
 		outputDir,
+		publicUrl,
 		buildAnalysis,
 		isVerbose,
 		isDevServer,

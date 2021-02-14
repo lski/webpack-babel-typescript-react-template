@@ -64,7 +64,7 @@ To run the application the scripts are similar to those of Create React App.
 
 ## Settings
 
-All settings are optional and are set using the command line (via webpacks --env flag) or environment variables:
+All settings are optional and are set using the command line (via webpacks --env flag) or environment variables **Note:** Command line has priority over Environment Variables:
 
 -   `--env server.host=0.0.0.0` (default: `0.0.0.0`)
 
@@ -82,22 +82,27 @@ All settings are optional and are set using the command line (via webpacks --env
 
     Creates a bundle report for the current build. See `yarn run analysis`
 
-Environment variables settings:
+-   `--env publicUrl=/` (default: `/`)
+
+    States what the prefix to assets such as js files is in the browser, based on the [webpack publicPath](https://webpack.js.org/configuration/output/#outputpublicpath). E.g. `publicUrl=/stuff` would result in a files like app.js being referenced as `/stuff/app.js`. It is useful for applications located in sub "folders" of the main domain or for assets that will be stored in CDNs e.g. `publicUrl=https://a-cdn/` would result in `https://a-cdn/app.js`. Note: it must end in a forward slash `/`.
+
+    The public Url can also be used throughout the application. It can be referenced directly in js/ts files via `process.env.PUBLIC_URL` or in the html template via `<%= PUBLIC_URL %>`.
+
+Environment variables equivalents:
 
 -   `server.host` -> `WPT_SERVER_HOST`
 -   `server.port` -> `WPT_SERVER_PORT`
 -   `outputDir` -> `WPT_OUTPUT_DIR`
 -   `analysis` -> `WPT_BUILD_ANALYSIS=true`
+-   `publicUrl` -> `PUBLIC_URL`
 
-_**Note:** Command line supersedes Environment Variables._
+A single `.env` file is supported fro development, however unlike CRA there is no support for multiple versions of `.env` as per the recommendation by the dotenv package.
 
-_**Tip:** Use an .env in local development mode._
+It is recommendation to use a .env file for defaults, but override the settings using the command line options for different environments. In CI environments it is recommended to simply use environment variable directly. The `.env` file is excluded from git, so will not effect other machines.
 
-## Environment Variables
+## Custom Environment Variables
 
-Similar to Create React App, this template supports using a `.env' located in the root, however where it differs from CRA is that only a single `.env` is supported, it is also excluded from source control as its main benefit is in using it for development and should not override ENV vars set in production.
-
-As well as supporting a `.env` file and being able to change [settings](./#Settings) using Environment Variables, it is also possible to reference them directly in your code! As pointed out by Create React App, exposing all the environment variables for a system would be a security risk, so only NODE*ENV plus any env vars that start `WPT_APP*` will be available in the app.
+Like with Create React App it is possible to use custom environment variables them directly in your code! However as pointed out by Create React App, exposing all the environment variables for a system would be a security risk, so only the only environment varibles available to your application are `NODE_ENV`, `PUBLIC_URL` and any environment variable that starts `WPT_APP_` will be available in the app.
 
 E.g. An environment variable: `WPT_APP_ADMIN_EMAIL=joe.bloggs@email.com` could be referenced directly in code with `process.env.WPT_APP_ADMIN_EMAIL`.
 
