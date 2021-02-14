@@ -25,7 +25,7 @@ dotenv.config();
  */
 module.exports = function build(env = {}, argv = {}) {
 	// Settings
-	const { outputDir, buildAnalysis, isVerbose, isDevServer, devServerHost, devServerPort } = resolveOptions(env);
+	const { buildPath, publicUrl, buildAnalysis, isVerbose, isDevServer, host, port } = resolveOptions(env);
 
 	// Mode
 	const mode = argv.mode || 'development';
@@ -34,15 +34,15 @@ module.exports = function build(env = {}, argv = {}) {
 	let config = combine(
 		cleanBuild(),
 		base(isVerbose),
-		outputUmd(outputDir),
+		outputUmd(buildPath, publicUrl),
 		fonts(),
 		images(),
 		html(),
 		rawFiles(),
 		react(),
-		envVars(),
+		envVars(publicUrl),
 		isDev ? development() : production(),
-		isDevServer && devServer(outputDir, devServerHost, devServerPort, isVerbose),
+		isDevServer && devServer(buildPath, host, port, isVerbose),
 		buildAnalysis && analysis(mode)
 		// add other configurations here
 	);

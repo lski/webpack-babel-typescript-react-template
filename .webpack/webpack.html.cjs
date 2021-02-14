@@ -5,11 +5,14 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
  *
  * @returns {import('webpack').Configuration}
  */
-const html = () => ({
+const html = (publicUrl) => ({
 	plugins: [
 		new HtmlWebpackPlugin({
 			template: './public/index.html',
 			hash: true,
+			templateParameters: {
+				PUBLIC_URL: publicUrl,
+			},
 		}),
 	],
 });
