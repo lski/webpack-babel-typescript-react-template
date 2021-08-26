@@ -10,7 +10,7 @@ const path = require('path');
 const resolveOptions = (args) => {
 	const env = process.env;
 
-	// Attenpt to ensure the options are not going to throw an null error
+	// Attempt to ensure the options are not going to throw an null error
 	const buildPath = path.resolve(args.buildPath || env.BUILD_PATH || './build');
 	const publicUrl = args.publicUrl || env.PUBLIC_URL || '/';
 
