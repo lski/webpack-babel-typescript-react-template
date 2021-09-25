@@ -9,12 +9,16 @@
 const devServer = (buildPath, host = '0.0.0.0', port = 3030, isVerbose = false) => ({
 	devtool: 'eval-cheap-source-map',
 	devServer: {
-		contentBase: buildPath,
 		compress: true,
 		port: port,
 		historyApiFallback: true,
 		host: host,
-		stats: isVerbose ? 'verbose' : 'minimal',
+		static: {
+			directory: buildPath,
+		},
+		devMiddleware: {
+			stats: isVerbose ? 'verbose' : 'minimal',
+		},
 	},
 });
 
