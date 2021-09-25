@@ -22,15 +22,6 @@
 		"react": "^17.0.2",
 		"react-dom": "^17.0.2"
 	},
-	"jest": {
-		"moduleNameMapper": {
-			"\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/mocks/fileMock.ts",
-			"\\.(css|less|scss)$": "identity-obj-proxy"
-		},
-		"setupFilesAfterEnv": [
-			"<rootDir>/jest.setup.ts"
-		]
-	},
 	"devDependencies": {
 		"@babel/core": "^7.15.5",
 		"@babel/plugin-proposal-class-properties": "^7.14.5",
@@ -38,9 +29,9 @@
 		"@babel/preset-env": "^7.15.6",
 		"@babel/preset-react": "^7.14.5",
 		"@babel/preset-typescript": "^7.15.0",
-		"@testing-library/jest-dom": "^5.11.6",
-		"@testing-library/react": "^11.2.2",
-		"@types/jest": "^26.0.19",
+		"@testing-library/jest-dom": "^5.14.1",
+		"@testing-library/react": "^12.1.0",
+		"@types/jest": "^27.0.2",
 		"@types/react-dom": "^17.0.9",
 		"@typescript-eslint/eslint-plugin": "^4.31.2",
 		"@typescript-eslint/parser": "^4.31.2",
@@ -58,7 +49,7 @@
 		"html-webpack-plugin": "^5.3.2",
 		"husky": "^7.0.2",
 		"identity-obj-proxy": "^3.0.0",
-		"jest": "^26.6.3",
+		"jest": "^27.2.1",
 		"prettier": "^2.4.1",
 		"pretty-quick": "^3.1.1",
 		"svg-url-loader": "^7.1.1",
