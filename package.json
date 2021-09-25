@@ -8,10 +8,11 @@
 		"analysis": "npm run build:dev --env analysis && npm run build --env analysis",
 		"build": "npx webpack --mode=\"production\"",
 		"build:dev": "npx webpack",
-		"lint": "npx eslint ./",
-		"lint:fix": "npx run lint --fix",
 		"start": "npx webpack serve",
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"lint": "npx prettier --check \"**/*.(js|ts|jsx|tsx)\" && npx eslint ./ && npm run ts",
+		"lint:fix": "npx prettier --write \"**/*.(js|ts|jsx|tsx)\" && npx eslint --fix ./",
+		"ts": "npx tsc --noEmit"
 	},
 	"contributors": [],
 	"keywords": [],

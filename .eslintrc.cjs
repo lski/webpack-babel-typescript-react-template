@@ -47,6 +47,8 @@ module.exports = {
 				'@typescript-eslint/explicit-function-return-type': 'off',
 				'@typescript-eslint/no-use-before-define': 'warn',
 				semi: ['error', 'always'],
+				'react/react-in-jsx-scope': 0,
+				'react/jsx-uses-react': 0,
 			},
 		},
 		{
@@ -58,6 +60,8 @@ module.exports = {
 			],
 			rules: {
 				semi: ['error', 'always'],
+				'react/react-in-jsx-scope': 0,
+				'react/jsx-uses-react': 0,
 			},
 		},
 		{
