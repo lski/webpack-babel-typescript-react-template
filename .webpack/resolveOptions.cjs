@@ -1,5 +1,14 @@
 const path = require('path');
 
+const defaultOptions = {
+	buildPath: './build',
+	publicUrl: '/',
+	host: '0.0.0.0',
+	port: 3030,
+	verbose: false,
+	analysis: false,
+};
+
 /**
  * Accepts an argument env object from the command line and tries to resolve the options
  *
@@ -7,19 +16,19 @@ const path = require('path');
  *
  * @returns {{ buildPath: string; publicUrl: string; buildAnalysis: boolean; isVerbose: boolean, isDevServer: boolean; host: string; port: number; }}
  */
-const resolveOptions = (args) => {
+const resolveOptions = (args, rootDir) => {
 	const env = process.env;
 
 	// Attempt to ensure the options are not going to throw an null error
-	const buildPath = path.resolve(args.buildPath || env.BUILD_PATH || './build');
-	const publicUrl = args.publicUrl || env.PUBLIC_URL || '/';
+	const buildPath = path.resolve(rootDir, args.buildPath || env.BUILD_PATH || defaultOptions.buildPath);
+	const publicUrl = args.publicUrl || env.PUBLIC_URL || defaultOptions.publicUrl;
 
-	const buildAnalysis = isTrue(args.analysis, env.BUILD_ANALYSIS);
-	const isVerbose = isTrue(args.verbose, env.BUILD_VERBOSE);
+	const buildAnalysis = isTrue(args.analysis, env.BUILD_ANALYSIS, defaultOptions.analysis);
+	const isVerbose = isTrue(args.verbose, env.BUILD_VERBOSE, defaultOptions.verbose);
 
 	const isDevServer = isTrue(args.WEBPACK_SERVE);
-	const host = args.host || env.HOST || '0.0.0.0';
-	const port = parseInt(args.port || env.PORT, 10) || 3030;
+	const host = args.host || env.HOST || defaultOptions.host;
+	const port = parseInt(args.port || env.PORT, 10) || defaultOptions.port;
 
 	const options = {
 		buildPath,
@@ -39,8 +48,8 @@ const resolveOptions = (args) => {
 };
 
 /**
- * If any value passed in is either exactly true, 'true' or 1, then it returns true, otherwise returns false.
- * Useful for accepting mulitple types for a true value.
+ * If any value passed in is either exactly `true`, `'true'` or `1`, then it returns true, otherwise returns false.
+ * Useful for accepting mulitple types for a true value, e.g. environment variables.
  *
  * @param {Array<object>} values
  */

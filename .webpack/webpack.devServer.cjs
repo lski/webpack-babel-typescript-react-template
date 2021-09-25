@@ -6,7 +6,7 @@
  *
  * @returns {import('webpack').Configuration}
  */
-const devServer = (buildPath, host = '0.0.0.0', port = 3030, isVerbose = false) => ({
+const devServer = (buildPath, host, port, isVerbose = false) => ({
 	devtool: 'eval-cheap-source-map',
 	devServer: {
 		compress: true,

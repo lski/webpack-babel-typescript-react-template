@@ -25,7 +25,7 @@ dotenv.config();
  */
 module.exports = function build(env = {}, argv = {}) {
 	// Settings
-	const { buildPath, publicUrl, buildAnalysis, isVerbose, isDevServer, host, port } = resolveOptions(env);
+	const { buildPath, publicUrl, buildAnalysis, isVerbose, isDevServer, host, port } = resolveOptions(env, __dirname);
 
 	// Mode
 	const mode = argv.mode || 'development';
