@@ -10,8 +10,8 @@
 		"build:dev": "npx webpack",
 		"start": "npx webpack serve",
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"lint": "npx prettier --check \"**/*.(js|ts|jsx|tsx)\" && npx eslint ./ && npm run ts",
-		"lint:fix": "npx prettier --write \"**/*.(js|ts|jsx|tsx)\" && npx eslint --fix ./",
+		"lint": "npx prettier --check \"**/*.{js,ts,jsx,tsx}\" && npx eslint \"./\" && npm run ts",
+		"lint:fix": "npx prettier --write \"**/*.{js,ts,jsx,tsx}\" && npx eslint --fix ./",
 		"ts": "npx tsc --noEmit"
 	},
 	"contributors": [],
